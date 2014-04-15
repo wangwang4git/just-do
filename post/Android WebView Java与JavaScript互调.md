@@ -80,6 +80,7 @@
     }
 ```
 > 注：Android SDK 4.2+需增加注解@JavascriptInterface
+
 * `HTML`中编写调用代码
 ```
     <body>
