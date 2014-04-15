@@ -10,7 +10,6 @@
         }
     </script>
 ```
-
 2. `Java`层直接调用
 ```
     WebSettings webSettings = mWebView.getSettings();
@@ -43,7 +42,6 @@
     // Java
     myJavaScriptInterface.get("ret");
 ```
-
 2. 另一种方法是截获JavaScript`alert`函数
 ```
     private class MyWebChromeClient extends WebChromeClient {
@@ -82,7 +80,6 @@
     }
 ```
 > 注：Android SDK 4.2+需增加注解@JavascriptInterface
-
 2. `HTML`中编写调用代码
 ```
     <body>
