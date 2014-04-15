@@ -1,7 +1,7 @@
 ## Android WebView Java与JavaScript互调
 
 #### Java调用JavaScript方式
-1. HTML中定义`JavaScript`函数
+* HTML中定义`JavaScript`函数
 ```
     <script language = "javascript">
         function add(i, j) {
@@ -10,7 +10,7 @@
         }
     </script>
 ```
-2. `Java`层直接调用
+* `Java`层直接调用
 ```
     WebSettings webSettings = mWebView.getSettings();
     webSettings.setJavaScriptEnabled(true);
@@ -21,7 +21,7 @@
 ```
 
 #### JavaScript返回值
-1. 一种方法是定义`JavaScriptInterface`类，其中存放结果`HashMap`，然后`JavaScript`层`set`结果，`Java`层`get`结果
+* 一种方法是定义`JavaScriptInterface`类，其中存放结果`HashMap`，然后`JavaScript`层`set`结果，`Java`层`get`结果
 ```
     final class MyJavaScriptInterface {
         private HashMap<String, String> mValueMap = new HashMap<String, String>();
@@ -42,7 +42,7 @@
     // Java
     myJavaScriptInterface.get("ret");
 ```
-2. 另一种方法是截获JavaScript`alert`函数
+* 另一种方法是截获JavaScript`alert`函数
 ```
     private class MyWebChromeClient extends WebChromeClient {
         @Override
@@ -65,7 +65,7 @@
 ```
 
 #### JavaScript调用Java方式
-1. `Java`层定义`JavaScriptInterface`类
+* `Java`层定义`JavaScriptInterface`类
 ```
     WebSettings webSettings = mWebView.getSettings();
     webSettings.setJavaScriptEnabled(true);
@@ -80,7 +80,7 @@
     }
 ```
 > 注：Android SDK 4.2+需增加注解@JavascriptInterface
-2. `HTML`中编写调用代码
+* `HTML`中编写调用代码
 ```
     <body>
         <p>调用java函数</p>
@@ -89,4 +89,4 @@
 ```
 
 ####Java返回值
-1. `java`函数返回值，直接返回给`JavaScript`变量，如上
+* `java`函数返回值，直接返回给`JavaScript`变量，如上
