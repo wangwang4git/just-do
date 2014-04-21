@@ -17,9 +17,49 @@
 
   `ConcurrentHashMap`类图  
 ![alt text](../img/ConcurrentHashMap类图.jpg "类图")  
+> 其中要注意，`putIfAbsent`方法返回值的处理，参见[ConcurrentMap.putIfAbsent(key,value) 用法讨论][6]  
+
   `ConcurrentHashMap`结构图  
 ![alt text](../img/ConcurrentHashMap结构图.jpg "类图")  
 
+#### 示例
+
+```java
+	private static final ConcurrentHashMap<Integer, String> mConcurrentHashMap = new ConcurrentHashMap<>();
+    
+    Thread thread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+
+				final Random random = new Random(100);
+
+				for (int i = 0; i < 1000; ++i) {
+					new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+
+							Integer integer = random.nextInt(10);
+
+							mConcurrentHashMap.putIfAbsent(integer, "integer = " + integer);
+
+						}
+					}, "child-thread" + (i + 1)).start();
+				}
+			}
+		}, "main-thread");
+		thread.start();
+        
+        System.out.println("mConcurrentHashMap.size() = " + mConcurrentHashMap.size());
+		Iterator<Entry<Integer, String>> iterator = mConcurrentHashMap.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<Integer, String> entry = iterator.next();
+			System.out.println("key = " + entry.getKey() + ", value = " + entry.getValue());
+		}
+```
 
 #### TO DO LIST
 1. [ConcurrentHashMap能完全替代HashTable吗？][5]
@@ -36,3 +76,4 @@
 [3]: http://ifeve.com/java-concurrent-hashmap-2/
 [4]: http://ifeve.com/hashmap-infinite-loop/
 [5]: http://ifeve.com/concurrenthashmap-vs-hashtable/
+[6]: http://wxl24life.iteye.com/blog/1746794
