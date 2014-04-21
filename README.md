@@ -8,3 +8,4 @@ for my job...
 2. [Android SurfaceView入门](./post/Android SurfaceView入门.md)
 3. [Android ContentProvider入门](./post/Android ContentProvider入门.md)
 4. [简单说说HashMap，HashTable，ConcurrentHashTable](./post/简单说说HashMap，HashTable，ConcurrentHashTable.md)
+5. [简单说说Synchronized，ReentrantLock](./post/简单说说Synchronized，ReentrantLock.md)
