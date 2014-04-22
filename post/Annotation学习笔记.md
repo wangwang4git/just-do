@@ -215,3 +215,50 @@
     }
 ```
 
+* `JUnit4`与`注解`
+
+> 之前版本`JUnit`，需要创建测试类，并且测试方法采用`test函数名`形式，这里`函数名`指待测试的函数，使用`assert`特殊族函数  
+> `JUnit4`增加`@Test`注解，不用新建测试类(`嵌入式`与`非嵌入式`)，并且测试方法命名随意，可以使用java assert语句与java异常机制  
+> `JUnit4`的非嵌入式测试可以基于`继承`与`组合`方式  
+> 简单示例如下：  
+
+```java
+	public class HashSetTest {
+    	
+        HashSet<String> testObject = new HashSet<String>();
+        
+        @Test
+        void initialization() {
+        	assert testObject.isEmpty();
+        }
+        
+        @Test
+        void _contains() {
+        	testObject.add("one");
+            
+            assert testObject.contains("one");
+        }
+        
+        @Test
+        void _remove() {
+        	testObject.add("one");
+            testObject.remove("one");
+            
+            assert testObject.isEmpty();
+        }
+        
+        public static void main(String[] args) {
+        	OSExecuteCommand("java net.mindview.atunit.AtUnit HashSetTest");
+        }
+        
+    }
+```
+
+> 具体java单元测试后续学习，留待日后
+
+
+#### TIDOLIST
+1. 使用`apt`处理注解
+
+#### 参考文献
+1. 《Java编程思想》
