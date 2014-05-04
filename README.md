@@ -10,10 +10,11 @@ for my job...
 4. [简单说说HashMap，HashTable，ConcurrentHashTable](./post/简单说说HashMap，HashTable，ConcurrentHashTable.md)
 5. [简单说说Synchronized，ReentrantLock](./post/简单说说Synchronized，ReentrantLock.md)
 6. [Annotation学习笔记](./post/Annotation学习笔记.md)
+7. [Java基本功不牢造成的那些似坑非坑](./post/Java基本功不牢造成的那些似坑非坑.md)
 
 ## TO DO LIST
 1. Java类型系统
 2. Java泛型
 3. Java反射
 4. 《打造Facebook》读书笔记
-......
+5. ......
