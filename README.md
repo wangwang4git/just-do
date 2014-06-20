@@ -11,10 +11,6 @@ for my job...
 5. [简单说说Synchronized，ReentrantLock](./post/简单说说Synchronized，ReentrantLock.md)
 6. [Annotation学习笔记](./post/Annotation学习笔记.md)
 7. [Java基本功不牢造成的那些似坑非坑](./post/Java基本功不牢造成的那些似坑非坑.md)
+8. [Android滤镜开发一二](./post/Android滤镜开发一二.md)
 
 ## TO DO LIST
-1. Java类型系统
-2. Java泛型
-3. Java反射
-4. 《打造Facebook》读书笔记
-5. ......
