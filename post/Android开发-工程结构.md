@@ -24,7 +24,7 @@
 <br />
   
 ###### 2. Android Studio，默认`Gradle`构建工具[Gradle Android Plugin，参考2][2]
-> Android Studio新建Android工程，存在`Project`与`Module`的概念，一个Android应用对应一个`Module`(和`Visual Studio`的`WorkSpace`、`Project`一个意思)  
+> Android Studio新建Android工程，存在`Project`与`Module`的概念，一个Android应用对应一个`Module`(和`Visual Studio`的`WorkSpace`、`Project`一个意思)；  
 > Gradle和Maven一样，强调约定优于配置，所以下面给出的均是约定的结构  
   
 对于一个`Module`结构如下：  
@@ -42,7 +42,6 @@
 | /src/main/res/ | 包含工程资源，参见上表`/res/`描述 |
 | /libs/ | 参见上表`/libs/`描述 |
 | /build/ | 包含唯一子目录`/build/generated/`，存放编译中间结果(R文件，rs编译输出，aidl编译输出等) |
-| /libs/ | 参见上表`/libs/`描述 |
 | /build.gradle | 该`Module`构建脚本 |
   
 
@@ -61,17 +60,77 @@
 ###### 3. 到底是选择Eclipse开发还是选择Android Studio开发？
 * Android Studio是Google基于`IntelliJ IDEA`专门针对Android推出，智能程度甩Eclipse几条街
 * 依赖管理承接Maven，如果你用Eclipse，一个一个下载jar包，jar包版本冲突解决，都太麻烦了
-* Gradle构建脚本灵活容易
+* Gradle构建脚本灵活容易，多平台发布
+* Android Studio多分辨率渲染
+  
+<center>![Alt text](../img/Android规范-结构02.png "渲染对比")</center>
+  
 * 所以开发Android强烈推荐Android Studio(Beta版已出)
   
-###### 4. res/目录详解
-
+###### 4. /res/目录详解[Resource Types，参考3][3]
+> 如下目录都不能再新建子目录，否则编译失败(参见`aapt`)
+  
+| 名称 | 描述 |
+| :---: | :--- |
+| res/anim/ | 放置渐变动画XML文件[参考4][4] |
+| res/color/ | 放置颜色状态XML文件[参考5][5] |
+| res/drawable/ | 放置PNG、JPEG、GIF文件，9-Patch，Shape等XML文件[**重点！**参考6][6]|
+| res/layout/ | 放置布局XML文件[参考7][7] |
+| res/menu/ | 放置菜单定义XML文件[参考8][8] |
+| res/raw/ | 可放置任意文件，但是会被`aapt`编译，所以可以使用R.raw.XXXX方式引用资源，推荐只放置一些多媒体数据 |
+| res/xml/ | 放置用于应用配置的XML文件 |
+| res/values/ | 放置涉及颜色值、尺寸值、属性定义值、字符串、样式等XML文件**重点！** |
+  
+既然上表说到`res/drawable/`是重点，那么现在具体说一说。  
+* 一是`drawable`的种类很多，显示的图片文件(.png、.jpg、.gif、.9.png)，还有一堆用XML描述的文件
+  
+> 用小Bitmap文件构建的XML Bitmap，在XML中指定小Bitmap文件的平铺方式，完成有规律图片的制作；  
+  
+> 用.9文件构建的XML .9，用于控制.9图片拉伸抖动；  
+  
+> 用一组drawable组合成的层叠drawable(Layer List)，典型应用自定义ProgressBar(进度显示，其实就是通过曾叠drawable)；  
+  
+> 用一组drawable组合成的状态drawable(State List)，典型应用自定义Button的点击状态和非点击状态；  
+  
+> 用一组drawable组合成的等级drawable(Level List)，对于ImageView组件，在不同场景需要显示不同图片，可以使用这种drawable(不过i哦我用的不多)；  
+  
+> 用两个drawable组合成的过度drawable(Transition Drawable)，用于设置淡出淡入过渡动画；  
+  
+> 用XML描述的Shape，可以指定Shape的形状、圆角、颜色、边框样式颜色、渐变，**对于能够用Shape写出来的drawable就坚决不用切图！**  
+  
+> 用现有drawable制作拉伸drawable(Scale Drawable)；  
+  
+> 用现有drawable制作水平、竖直方向裁剪drawable(Clip Drawable)，对于ImageView组件，当需要显示图片的部分区域时比较有用；  
+  
+> Inset Drawable，自己去搜索吧...  
+  
+* 二是`res/drawable/`文件夹可能包含各种稀奇古怪的后缀，比如`res/drawable-hdpi/`，这就要说到Android适配的一个点了
+  
+> 即对于`res/drawable-mdpi/`与`res/drawable-hdpi/`中同名的一张.png资源，**Android有一套查找最适合资源的策略**[参考9][9]；  
+  
+<center>![Alt text](../img/Android规范-结构01.png "how Android finds the best-matching resource")</center>
+  
+> 
 
 ---
 #### 参考文献
 1. [Managing Projects][1]
 2. [Android Tools Project Site][2]
+3. [Resource Types][3]
+4. [Animation Resources][4]
+5. [Color State List Resource][5]
+6. [Drawable Resources][6]
+7. [Layout Resource][7]
+8. [Menu Resource][8]
+9. [How Android Finds the Best-matching Resource][9]
 
 
-[1]: http://developer.android.com/intl/zh-cn/tools/projects/index.html "Managing Projects"
+[1]: http://developer.android.com/intl/zh-cn/tools/projects/index.html
 [2]: http://tools.android.com/tech-docs/new-build-system/user-guide
+[3]: http://developer.android.com/intl/zh-cn/guide/topics/resources/available-resources.html
+[4]: http://developer.android.com/intl/zh-cn/guide/topics/resources/animation-resource.html
+[5]: http://developer.android.com/intl/zh-cn/guide/topics/resources/color-list-resource.html
+[6]: http://developer.android.com/intl/zh-cn/guide/topics/resources/drawable-resource.html
+[7]: http://developer.android.com/intl/zh-cn/guide/topics/resources/layout-resource.html
+[8]: http://developer.android.com/intl/zh-cn/guide/topics/resources/menu-resource.html
+[9]: http://developer.android.com/intl/zh-cn/guide/topics/resources/providing-resources.html#BestMatch
