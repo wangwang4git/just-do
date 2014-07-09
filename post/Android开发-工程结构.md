@@ -72,14 +72,15 @@
   
 | 名称 | 描述 |
 | :---: | :--- |
-| res/anim/ | 放置渐变动画XML文件[参考4][4] |
+| res/anim/ | 放置补间动画、插值器、布局动画媒介等XML文件，动画部分后文再说[参考4][4] |
+| res/animator/ | 放置属性动画XML文件，动画部分后文再说[参考4][4] |
 | res/color/ | 放置颜色状态XML文件[参考5][5] |
-| res/drawable/ | 放置PNG、JPEG、GIF文件，9-Patch，Shape等XML文件[**重点！**参考6][6]|
+| res/drawable/ | 放置PNG、JPEG、GIF文件，9-Patch、Shape、[逐帧动画][10]等XML文件[**重点！**参考6][6]|
 | res/layout/ | 放置布局XML文件[参考7][7] |
 | res/menu/ | 放置菜单定义XML文件[参考8][8] |
 | res/raw/ | 可放置任意文件，但是会被`aapt`编译，所以可以使用R.raw.XXXX方式引用资源，推荐只放置一些多媒体数据 |
 | res/xml/ | 放置用于应用配置的XML文件 |
-| res/values/ | 放置涉及颜色值、尺寸值、属性定义值、字符串、样式等XML文件**重点！** |
+| res/values/ | 放置涉及颜色值、尺寸值、属性定义值、字符串、样式等XML文件 |
   
 既然上表说到`res/drawable/`是重点，那么现在具体说一说。  
 * 一是`drawable`的种类很多，显示的图片文件(.png、.jpg、.gif、.9.png)，还有一堆用XML描述的文件
@@ -110,7 +111,20 @@
   
 <center>![Alt text](../img/Android规范-结构01.png "how Android finds the best-matching resource")</center>
   
-> 
+> 大致意思就是说，Android系统先根据系统配置直接剔除一些冲突的`后缀文件夹`；  
+  
+> 然后根据[限定匹配表][11]，从上往下匹配，找到一项匹配项时，立刻剔除一些冲突的`后缀文件夹`；再重复这个过程；  
+  
+> 最后找到适合的`后缀文件夹`，取出指定的.png资源；  
+  
+> 但是需要注意的是，在根据限定匹配表匹配的时候，如果匹配了`屏幕密度`，则直接跳出，不再进行后续匹配工作；  
+  
+* 三是`drawable`文件夹的后缀怎么取？感觉可以按`限定匹配表`任意组合，可实际情况是，实际情况是**只按`屏幕密度`来取**
+  
+> 对于XML文件，直接放置于`res/drawable/`；  
+  
+> 对于图片文件(.png、.jpg、.gif、.9.png)，放置于`res/drawable-ldpi/`、`res/drawable-mdpi/`、`res/drawable-hdpi/`、`res/drawable-xhdpi/`、`res/drawable-xxhdpi/`、`res/drawable-xxxhdpi/`，[参考12][12];  
+
 
 ---
 #### 参考文献
@@ -123,6 +137,9 @@
 7. [Layout Resource][7]
 8. [Menu Resource][8]
 9. [How Android Finds the Best-matching Resource][9]
+10. [AnimationDrawable][10]
+11. [providing-resources.html#table2][11]
+12. [create-bitmaps][12]
 
 
 [1]: http://developer.android.com/intl/zh-cn/tools/projects/index.html
@@ -134,3 +151,6 @@
 [7]: http://developer.android.com/intl/zh-cn/guide/topics/resources/layout-resource.html
 [8]: http://developer.android.com/intl/zh-cn/guide/topics/resources/menu-resource.html
 [9]: http://developer.android.com/intl/zh-cn/guide/topics/resources/providing-resources.html#BestMatch
+[10]: http://developer.android.com/intl/zh-cn/reference/android/graphics/drawable/AnimationDrawable.html
+[11]: http://developer.android.com/intl/zh-cn/guide/topics/resources/providing-resources.html#table2
+[12]: http://developer.android.com/intl/zh-cn/training/basics/supporting-devices/screens.html#create-bitmaps

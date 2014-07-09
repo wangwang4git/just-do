@@ -12,5 +12,7 @@ for my job...
 6. [Annotation学习笔记](./post/Annotation学习笔记.md)
 7. [Java基本功不牢造成的那些似坑非坑](./post/Java基本功不牢造成的那些似坑非坑.md)
 8. [Android滤镜开发一二](./post/Android滤镜开发一二.md)
+9. [Android开发规范系列](./post/Android开发规范系列.md)
 
 ## TO DO LIST
+- [ ] Android开发规范系列

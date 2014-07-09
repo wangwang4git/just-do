@@ -13,7 +13,7 @@
 
 ---
 #### TODO LIST
-- [ ] Android开发-工程结构
+- [x] Android开发-工程结构
 - [ ] Android开发-开发工具
 - [ ] Android开发-代码规范
 - [ ] Android开发-资源规范
