@@ -40,9 +40,13 @@
 | /src/main/jni/ | 包含`NDK`工程源码 |
 | /src/main/assets/ | 包含工程资源，参见上表`/assets/`描述 |
 | /src/main/res/ | 包含工程资源，参见上表`/res/`描述 |
-| /libs/ | 参见上表`/libs/`描述 |
+| /libs/ | 第三方jar包 |
 | /build/ | 包含唯一子目录`/build/generated/`，存放编译中间结果(R文件，rs编译输出，aidl编译输出等) |
 | /build.gradle | 该`Module`构建脚本 |
+  
+注意:在Android Studio中引入`.so`本地库，由于一开始`gradle`的`android`插件在这一块支持的不好，导致有三种方式[方式一二][13]/[方式三][14]，我们推荐第三种方式：新建目录`/src/main/jniLibs`，并把相关`.so`本地库拷贝至该目录，不需要修改`build.gradle`。  
+  
+<center>![Alt text](../img/Android规范-结构03.png "引入so文件")</center>
   
 
 对于`Project`结构如下：  
@@ -140,6 +144,8 @@
 10. [AnimationDrawable][10]
 11. [providing-resources.html#table2][11]
 12. [create-bitmaps][12]
+13. [在Android Studio 中加入jar 和.so 文件][13]
+14. [有关Android studio工具添加高德地图API的so库文件使用说明][14]
 
 
 [1]: http://developer.android.com/intl/zh-cn/tools/projects/index.html
@@ -154,3 +160,5 @@
 [10]: http://developer.android.com/intl/zh-cn/reference/android/graphics/drawable/AnimationDrawable.html
 [11]: http://developer.android.com/intl/zh-cn/guide/topics/resources/providing-resources.html#table2
 [12]: http://developer.android.com/intl/zh-cn/training/basics/supporting-devices/screens.html#create-bitmaps
+[13]: http://my.oschina.net/zhibuji/blog/147441
+[14]: http://bbs.amap.com/thread-16638-1-1.html
