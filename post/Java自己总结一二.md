@@ -2,7 +2,7 @@
 
 #### Java内存泄露
 对于Java这一类`内存托管`语言，内存泄露的主要原因：保留下来却永远不再使用的对象引用。  
-> 内存泄露事例  
+> 内存泄露示例  
 
 ```java
 Vector v = new Vector(10);
@@ -15,7 +15,7 @@ for (int i = 0; i < 10; ++i) {
 
 对于C/C++来说，内存泄露的范围更大一些，有些对象被分配了内存空间，然后却不可达，这些内存将永远收不回来；而在Java中，这些对象可由GC回收。  
 
-#### Java垃圾收集
+#### Java[垃圾收集][1]
 ###### 1.运行时数据区域划分  
 JVM执行Java程序会把它所管理的内存划分为若干个不同的数据区域。  
 > JVM运行时数据区
@@ -39,21 +39,166 @@ JVM执行Java程序会把它所管理的内存划分为若干个不同的数据�
   
 <center>![alt text](../img/Java一二02.png "HotSpot垃圾收集器")</center>  
   
-重点关注的几个：`Parallel Scavenge`、`CMS`、`G1`。其中`G1`没有分代的概念，有一个分区`region`的概念。  
+重点关注的几个：`Parallel Scavenge-用于控制JVM吞吐量Throughput`、`CMS`、`G1`。其中`G1`没有分代的概念，有一个分区`region`的概念。  
   
 JVM调优会涉及到垃圾收集器选择与设置。  
   
 #### Java Object
 ###### 1.toString()
+用于显示调用输出对象信息，或者`this + "string"`字符串重载`+`运算符形式，将`this`转为`String`类型（隐式调用）。  
+  
 ###### 2.hashCode()
+用于`HashMap`中元素增删改查时`Key`的`Hash`操作。
+> JDK`HashMap`的`hash()`源码如下
+  
+```java
+/**
+ * Retrieve object hash code and applies a supplemental hash function to the
+ * result hash, which defends against poor quality hash functions.  This is
+ * critical because HashMap uses power-of-two length hash tables, that
+ * otherwise encounter collisions for hashCodes that do not differ
+ * in lower bits. Note: Null keys always map to hash 0, thus index 0.
+ */
+final int hash(Object k) {
+    int h = 0;
+    if (useAltHashing) {
+        if (k instanceof String) {
+            return sun.misc.Hashing.stringHash32((String) k);
+        }
+        h = hashSeed;
+    }
+
+    h ^= k.hashCode();
+
+    // This function ensures that hashCodes that differ only by
+    // constant multiples at each bit position have a bounded
+    // number of collisions (approximately 8 at default load factor).
+    h ^= (h >>> 20) ^ (h >>> 12);
+    return h ^ (h >>> 7) ^ (h >>> 4);
+}
+```
+  
+重写`hashCode()`函数是一个考点，需要注意一些细节。  
+> 重写`hashCode()`函数
+  
+```java
+public int hashCode() {
+	return id != null ? id.hashCode() : 0;
+}
+```
+  
 ###### 3.equals()
+用于对象相等测试，比如容器`indexOf()`、`remove()`、`contains()`等函数中。  
+> JDK`ArrayList`的`indexOf()`源码如下
+  
+```java
+/**
+ * Returns the index of the first occurrence of the specified element
+ * in this list, or -1 if this list does not contain the element.
+ * More formally, returns the lowest index <tt>i</tt> such that
+ * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
+ * or -1 if there is no such index.
+ */
+public int indexOf(Object o) {
+    if (o == null) {
+        for (int i = 0; i < size; i++)
+            if (elementData[i]==null)
+                return i;
+    } else {
+        for (int i = 0; i < size; i++)
+            if (o.equals(elementData[i]))
+                return i;
+    }
+    return -1;
+}
+```
+  
+重写`equals()`函数是一个考点，需要注意一些细节。  
+> 重写`equals()`函数
+  
+```java
+public boolean equals(Object o) {
+	// 判断自己比较自己
+    if (this == o) {
+    	return true;
+    }
+    // 判断参数，判断参数Class对象与自己Class对象
+    if (o == null || getClass() != o.getClass()) {
+    	return false;
+    }
+    A a = (A) o;
+    // 判断待比较字段
+    if (id != null) {
+    	return id.equals(a.id);
+    } else {
+    	return a.id == null;
+    }
+}
+```
+  
 ###### 4.clone()
 ###### 5.多个wait()
-###### 6.notify()
-###### 7.notifyAll()
+用于多线程同步，阻塞线程，注意：`wait()`函数的调用必须先获取`锁`。  
+  
+###### 6.notify()/notifyAll()
+用于多线程同步，唤醒线程，注意：`notify()`/`notifyAll()`函数的调用必须先获取`锁`（与`wait()`调用时同一个`锁`）。  
+> 典型用法
+  
+```java
+// 线程一
+synchronized(shareMonitor) {
+	while (conditionIsNotMet) {
+    	shareMonitor.wait();
+    }
+}
+...
+// 线程二
+synchronized(shareMonitor) {
+    shareMonitor.notify();
+}
+```
+  
+> 当然可以使用显示的`Lock`、`Condition`对象
+  
+```java
+Lock lock = new ReentrantLock();
+Condition cond = lock.newCondition();
+...
+// 线程一
+lock.lock();
+try {
+	while (conditionIsNotMet) {
+    	cond.await();
+    }
+} finally {
+	lock.unlock();
+}
+...
+// 线程二
+lock.lock();
+try {
+	cond.signal();
+} finally {
+	lock.unlock();
+}
+```
+  
 ###### 8.getClass()
+获取`Class`对象，`Class`对象在类加载阶段生成，用于`RTTI`。  
+  
 ###### 9.fianlize()
 
+#### Java Container容器
+
+#### Java IO
+
+#### Java并发
 
 
-#### Java Container
+---
+#### 书籍列表
+1. [深入理解Java虚拟机][1]
+
+
+
+[1]: http://book.douban.com/subject/24722612/
