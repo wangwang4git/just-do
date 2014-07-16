@@ -140,8 +140,10 @@ public boolean equals(Object o) {
 ###### 4.clone()
 注意浅复制与深复制。  
   
+Object中默认的实现是一个浅复制，如果要实现深复制，必须对类中可变域生成新的实例。  
+  
 重写`clone()`，同时还应该实现标志接口`Cloneable`，当对象存在组合关系时，需要考虑组合对象的`Clone`。  
-> 示例
+> 示例（其实`Clone()`用的不多）
   
 ```java
 class ClassA implements Cloneable {
@@ -222,6 +224,141 @@ try {
 潜在的编程陷进：将`finalize()`等同于C++析构函数。对象被回收的时机是不确定的，也可能永远不会被回收，如果资源的释放依赖于`finalize()`，那么释放可能永远也不会发生。  
 
 #### Java Container容器
+  
+<center>![alt text](../img/Java一二03.png "Java容器类库")</center>
+  
+###### 1.ArrayList
+底层数据结构：`Object[]`。  
+  
+默认数组容量：10。  
+> 参考源码
+  
+```java
+...
+private transient Object[] elementData;
+...
+public ArrayList(int initialCapacity) {
+    super();
+    if (initialCapacity < 0)
+        throw new IllegalArgumentException("Illegal Capacity: "+ initialCapacity);
+    this.elementData = new Object[initialCapacity];
+}
+...
+public ArrayList() {
+    this(10);
+}
+...
+public ArrayList(Collection<? extends E> c) {
+    elementData = c.toArray();
+    size = elementData.length;
+    // c.toArray might (incorrectly) not return Object[] (see 6260652)
+    if (elementData.getClass() != Object[].class)
+        elementData = Arrays.copyOf(elementData, size, Object[].class);
+}
+```
+  
+扩容方案：当前数组长度 * `1.5`。同时存在缩容方案：`trimToSize()`。  
+> 参考源码
+  
+```java
+private void grow(int minCapacity) {
+    // overflow-conscious code
+    int oldCapacity = elementData.length;
+    int newCapacity = oldCapacity + (oldCapacity >> 1);
+    if (newCapacity - minCapacity < 0)
+        newCapacity = minCapacity;
+    if (newCapacity - MAX_ARRAY_SIZE > 0)
+        newCapacity = hugeCapacity(minCapacity);
+    // minCapacity is usually close to size, so this is a win:
+    elementData = Arrays.copyOf(elementData, newCapacity);
+}
+```
+  
+迭代器遍历：`iterator()`方法返回`AbstractList`内部类`Itr`对象（`ArrayList`同样存在一份可选`Itr`内部类）。迭代器内部`next()`、`remove()`有`快速失败`检查。也包含`listIterator()`，参见`LinkedList`部分。  
+  
+###### 2.LinkedList
+底层数据结构：`双向链表`。  
+> 参考源码
+  
+```java
+...
+transient Node<E> first;
+transient Node<E> last;
+...
+public LinkedList() {
+}
+...
+private static class Node<E> {
+    E item;
+    Node<E> next;
+    Node<E> prev;
+
+    Node(Node<E> prev, E element, Node<E> next) {
+        this.item = element;
+        this.next = next;
+        this.prev = prev;
+    }
+}
+```
+  
+`get()`方案：获取位置小于`LinkedList`长度一半，从头遍历；获取位置大于等于`LinkedList`长度一半，从尾遍历。  
+> 参考源码：
+  
+```java
+Node<E> node(int index) {
+    // assert isElementIndex(index);
+
+    if (index < (size >> 1)) {
+        Node<E> x = first;
+        for (int i = 0; i < index; i++)
+            x = x.next;
+        return x;
+    } else {
+        Node<E> x = last;
+        for (int i = size - 1; i > index; i--)
+            x = x.prev;
+        return x;
+    }
+}
+```
+  
+迭代器遍历：`listIterator(index)`方法返回内部类`ListItr`对象，支持`hasPrevious()`、`hasNext()`遍历，同时支持`add()`、`set()`、`remove()`操作。同样包含`快速失败`检查。  
+  
+###### 3.Vector
+> 取自类注释（基本就是，这个类能不用就不用，设计的同步粒度太大了，降低性能啊！）
+  
+```java
+* <p>As of the Java 2 platform v1.2, this class was retrofitted to
+* implement the {@link List} interface, making it a member of the
+* <a href="{@docRoot}/../technotes/guides/collections/index.html">
+* Java Collections Framework</a>.  Unlike the new collection
+* implementations, {@code Vector} is synchronized.  If a thread-safe
+* implementation is not needed, it is recommended to use {@link
+* ArrayList} in place of {@code Vector}.
+```
+  
+底层数据结构：`Object[]`。  
+  
+默认数组容量：10。  
+  
+扩容方案：`capacityIncrement`大于0，则当前长度 + `capacityIncrement`；则当前长度 * 2。所以是用户可控的扩容方案。  
+  
+和`ArrayList`的区别在于`add`、`remove`、`get`、`set`、`contains`、`iterator`等均是`synchonized`方法。  
+  
+迭代器遍历：参见`ArrayList`部分。  
+  
+###### 4.Stack
+> 截取一段源码注释吧，我什么都不说了，只有一点`Stack`继承`Vector`
+  
+```java
+* <p>A more complete and consistent set of LIFO stack operations is
+* provided by the {@link Deque} interface and its implementations, which
+* should be used in preference to this class.  For example:
+* <pre>   {@code
+*   Deque<Integer> stack = new ArrayDeque<Integer>();}</pre>
+*
+```
+  
 
 #### Java IO
 
