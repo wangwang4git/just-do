@@ -84,6 +84,7 @@ final int hash(Object k) {
 ```java
 public int hashCode() {
 	return id != null ? id.hashCode() : 0;
+    // 或者自定义Hash算法
 }
 ```
   
@@ -137,6 +138,33 @@ public boolean equals(Object o) {
 ```
   
 ###### 4.clone()
+注意浅复制与深复制。  
+  
+重写`clone()`，同时还应该实现标志接口`Cloneable`，当对象存在组合关系时，需要考虑组合对象的`Clone`。  
+> 示例
+  
+```java
+class ClassA implements Cloneable {
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+}
+...
+class ClassB implements Cloneable {
+    ClassA a;
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        ClassB b = (ClassB) super.clone();
+        if (a != null) {
+            b.a = (ClassA) a.clone();
+        }
+        return b;
+    }
+}
+```
+  
 ###### 5.多个wait()
 用于多线程同步，阻塞线程，注意：`wait()`函数的调用必须先获取`锁`。  
   
@@ -154,7 +182,7 @@ synchronized(shareMonitor) {
 ...
 // 线程二
 synchronized(shareMonitor) {
-    shareMonitor.notify();
+    shareMonitor.notifyAll();
 }
 ```
   
@@ -184,9 +212,14 @@ try {
 ```
   
 ###### 8.getClass()
-获取`Class`对象，`Class`对象在类加载阶段生成，用于`RTTI`。  
+获取`Class`对象，它包含了与类有关的信息，用于`RTTI`。事实上，Class对象就是用来创建类的所有`常规`对象的。  
+  
+每一个类都有一个Class对象。  
   
 ###### 9.fianlize()
+一旦垃圾回收器准备好释放对象占用的存储空间，将首先调用其`finalize`方法，并且在下一次垃圾回收动作发生时，才会真正回收对象占用的内存。  
+  
+潜在的编程陷进：将`finalize()`等同于C++析构函数。对象被回收的时机是不确定的，也可能永远不会被回收，如果资源的释放依赖于`finalize()`，那么释放可能永远也不会发生。  
 
 #### Java Container容器
 
@@ -198,7 +231,5 @@ try {
 ---
 #### 书籍列表
 1. [深入理解Java虚拟机][1]
-
-
 
 [1]: http://book.douban.com/subject/24722612/
