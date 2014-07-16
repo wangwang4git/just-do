@@ -328,6 +328,8 @@ Node<E> node(int index) {
 > 取自类注释（基本就是，这个类能不用就不用，设计的同步粒度太大了，降低性能啊！）
   
 ```java
+/*
+...
 * <p>As of the Java 2 platform v1.2, this class was retrofitted to
 * implement the {@link List} interface, making it a member of the
 * <a href="{@docRoot}/../technotes/guides/collections/index.html">
@@ -335,6 +337,8 @@ Node<E> node(int index) {
 * implementations, {@code Vector} is synchronized.  If a thread-safe
 * implementation is not needed, it is recommended to use {@link
 * ArrayList} in place of {@code Vector}.
+...
+*/
 ```
   
 底层数据结构：`Object[]`。  
@@ -348,15 +352,77 @@ Node<E> node(int index) {
 迭代器遍历：参见`ArrayList`部分。  
   
 ###### 4.Stack
-> 截取一段源码注释吧，我什么都不说了，只有一点`Stack`继承`Vector`
+> 截取一段源码注释吧，我什么都不说了，只说一点`Stack`继承`Vector`
   
 ```java
+/*
+...
 * <p>A more complete and consistent set of LIFO stack operations is
 * provided by the {@link Deque} interface and its implementations, which
 * should be used in preference to this class.  For example:
 * <pre>   {@code
 *   Deque<Integer> stack = new ArrayDeque<Integer>();}</pre>
 *
+...
+*/
+```
+  
+###### 5.HashSet
+底层数据结构：`HashMap`。  
+  
+默认容量：16；扩容因子：0.75。  
+> 源码
+  
+```java
+...
+private transient HashMap<E,Object> map;
+// Dummy value to associate with an Object in the backing Map
+private static final Object PRESENT = new Object();
+...
+/**
+ * Constructs a new, empty set; the backing <tt>HashMap</tt> instance has
+ * default initial capacity (16) and load factor (0.75).
+ */
+public HashSet() {
+    map = new HashMap<>();
+}
+...
+```
+  
+`put`操作：向`HashMap`添加`Key-Value`，其中`Value`为占位对象`PRESENT`。
+> 源码
+  
+```java
+public boolean add(E e) {
+	return map.put(e, PRESENT)==null;
+}
+```
+  
+`remove`操作
+> 源码
+  
+```java
+public boolean remove(Object o) {
+    return map.remove(o)==PRESENT;
+}
+```
+  
+`contains`操作
+> 源码
+  
+```java
+public boolean contains(Object o) {
+    return map.containsKey(o);
+}
+```
+  
+没有`get`操作，只能通过`iterator`实现获取操作
+> 源码
+  
+```java
+public Iterator<E> iterator() {
+    return map.keySet().iterator();
+}
 ```
   
 
