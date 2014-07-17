@@ -672,7 +672,7 @@ private final class EntrySet extends AbstractSet<Map.Entry<K,V>> {
   
 其中上文三个操作`keySet`、`values`、`entrySet`，返回的迭代器均是继承至`HashIterator`，通过修改`next()`返回对应的数据（key、value、entry）。  
   
-扩容操作：也就是常说的rehash，新建entry数组，然后遍历老数组entry对象，进行put。注意如果发生hash碰撞，entry对象添加在单链表的头部。多线程环境下，这里可能会导致`get`操作死循环，CPU直接跑满！[传送门]("./简单说说HashMap，HashTable，ConcurrentHashTable.md")  
+扩容操作：也就是常说的rehash，新建entry数组，然后遍历老数组entry对象，进行put。注意如果发生hash碰撞，entry对象添加在单链表的头部。多线程环境下，这里可能会导致`get`操作死循环，CPU直接跑满！[传送门](./简单说说HashMap，HashTable，ConcurrentHashTable.md)  
 > 源码
   
 ```java
@@ -711,7 +711,240 @@ void transfer(Entry[] newTable, boolean rehash) {
 }
 ```
   
+###### 9.TreeMap
+底层数据结构：红黑树。  
+> 源码
+  
+```java
+...
+private transient Entry<K,V> root = null;
+...
+static final class Entry<K,V> implements Map.Entry<K,V> {
+    K key;
+    V value;
+    Entry<K,V> left = null;
+    Entry<K,V> right = null;
+    Entry<K,V> parent;
+    boolean color = BLACK;
 
+    /**
+     * Make a new cell with given key, value, and parent, and with
+     * {@code null} child links, and BLACK color.
+     */
+    Entry(K key, V value, Entry<K,V> parent) {
+        this.key = key;
+        this.value = value;
+        this.parent = parent;
+    }
+    ...
+}
+...
+```
+  
+重点留意一下`put(key, value)`操作：就是单纯的一个红黑树插入操作。从插入操作可以看出，对于`TreeMap`要么传入`Comparator`对象，要么`key`实现`Comparable`接口。  
+> 源码
+  
+```java
+public V put(K key, V value) {
+    Entry<K,V> t = root;
+    if (t == null) {
+        compare(key, key); // type (and possibly null) check
+
+        root = new Entry<>(key, value, null);
+        size = 1;
+        modCount++;
+        return null;
+    }
+    int cmp;
+    Entry<K,V> parent;
+    // split comparator and comparable paths
+    Comparator cpr = comparator;
+    if (cpr != null) {
+        do {
+            parent = t;
+            cmp = cpr.compare(key, t.key);
+            if (cmp < 0)
+                t = t.left;
+            else if (cmp > 0)
+                t = t.right;
+            else
+                return t.setValue(value);
+        } while (t != null);
+    }
+    else {
+        if (key == null)
+            throw new NullPointerException();
+        Comparable k = (Comparable) key;
+        do {
+            parent = t;
+            cmp = k.compareTo(t.key);
+            if (cmp < 0)
+                t = t.left;
+            else if (cmp > 0)
+                t = t.right;
+            else
+                return t.setValue(value);
+        } while (t != null);
+    }
+    Entry<K,V> e = new Entry<>(key, value, parent);
+    if (cmp < 0)
+        parent.left = e;
+    else
+        parent.right = e;
+    fixAfterInsertion(e);	// 红黑树恢复操作
+    size++;
+    modCount++;
+    return null;
+}
+```
+  
+`get(key)`操作：典型的红黑树查找。  
+  
+`remove(key)`操作：先get到entry，然后再调用delete删除entry。需参考红黑树删除，后续补充。  
+  
+`containsKey(key)`操作：参见`get`操作。  
+  
+`keySet()`、`values()`、`entrySet()`操作：用于迭代器遍历时，返回的迭代器`iterator`都是用`getFirstEntry()`初始化（_遍历从第一个节点开始_），对应都继承于抽象内部类`PrivateEntryIterator`。  
+> 源码
+  
+```java
+...
+final class EntryIterator extends PrivateEntryIterator<Map.Entry<K,V>> {
+    EntryIterator(Entry<K,V> first) {
+        super(first);
+    }
+    public Map.Entry<K,V> next() {
+        return nextEntry();
+    }
+}
+
+final class ValueIterator extends PrivateEntryIterator<V> {
+    ValueIterator(Entry<K,V> first) {
+        super(first);
+    }
+    public V next() {
+        return nextEntry().value;
+    }
+}
+
+final class KeyIterator extends PrivateEntryIterator<K> {
+    KeyIterator(Entry<K,V> first) {
+        super(first);
+    }
+    public K next() {
+        return nextEntry().key;
+    }
+}
+...
+```
+  
+###### 10.LinkedHashMap
+底层数据结构：继承`HashMap`，但是创建双链表保存`HashMap`中的`key-value`对，通过重写父类相关方法，修改双链表，目的在于迭代器遍历，输出有序（支持`插入顺序`、`访问顺序`）。  
+> 源码
+  
+```java
+private transient Entry<K,V> header;
+
+/**
+ * The iteration ordering method for this linked hash map: <tt>true</tt>
+ * for access-order, <tt>false</tt> for insertion-order.
+ *
+ * @serial
+ */
+private final boolean accessOrder;
+...
+private static class Entry<K,V> extends HashMap.Entry<K,V> {
+    // These fields comprise the doubly linked list used for iteration.
+    Entry<K,V> before, after;
+    ...
+}
+```
+  
+`put`操作：`LinkedHashMap`重写了`addEntry`、`createEntry`方法，其中在`createEntry`中会修改双向链表，将最新加入的`entry`放置于`header`之前；在`addEntry`中会根据是否允许删除`最旧`元素，进行删除操作（是不是可以想到用它来实现`LRU缓存`）。  
+> 源码
+  
+```java
+void addEntry(int hash, K key, V value, int bucketIndex) {
+    super.addEntry(hash, key, value, bucketIndex);
+
+    // Remove eldest entry if instructed
+    Entry<K,V> eldest = header.after;
+    if (removeEldestEntry(eldest)) {
+        removeEntryForKey(eldest.key);
+    }
+}
+
+void createEntry(int hash, K key, V value, int bucketIndex) {
+    HashMap.Entry<K,V> old = table[bucketIndex];
+    Entry<K,V> e = new Entry<>(hash, key, value, old);
+    table[bucketIndex] = e;
+    e.addBefore(header);
+    size++;
+}
+```
+  
+> 插入新元素，双向链表修改如图
+  
+<center>![img text](../img/Java一二04.png "链表修改")</center>
+  
+`get`操作：和`HashMap`操作一致，区别在于，在`LinkedHashMap`初始化时如果设置`accessOrder`，则修改双向链表，移动访问项到`header`前一个位置，可参见上图。  
+  
+遍历操作：支持`keySet`、`values`、`entrySet`，均是基于内部类`LinkedHashIterator`，遍历顺序根据双向链表顺序来，遍历起点为`header.after`。  
+> 源码
+  
+```java
+private abstract class LinkedHashIterator<T> implements Iterator<T> {
+    Entry<K,V> nextEntry    = header.after;
+    Entry<K,V> lastReturned = null;
+    ...
+}
+
+private class KeyIterator extends LinkedHashIterator<K> {
+    public K next() { return nextEntry().getKey(); }
+}
+
+private class ValueIterator extends LinkedHashIterator<V> {
+    public V next() { return nextEntry().value; }
+}
+
+private class EntryIterator extends LinkedHashIterator<Map.Entry<K,V>> {
+    public Map.Entry<K,V> next() { return nextEntry(); }
+}
+```
+  
+###### 11.对上面的总结
+上文描述容器类，都不是线程安全的，多线程环境下涉及迭代器遍历都可能发生`fast-fail`错误。如何实现线程安全的支持？  
+  
+一种方式是，`Collections`类包含相当多的静态方法，用于把上述容器类封装为线程安全的容器类，比如`synchronizedMap`、`unmodifiableMap`。`synchronizedMap`是对读写操作加同步锁，`unmodifiableMap`直接只许读不许写。  
+> 源码
+  
+```java
+public static <K,V> Map<K,V> synchronizedMap(Map<K,V> m) {
+    return new SynchronizedMap<>(m);
+}
+
+private static class SynchronizedMap<K,V> implements Map<K,V>, Serializable {
+    ...
+    public V get(Object key) {
+        synchronized (mutex) {return m.get(key);}
+    }
+    public V put(K key, V value) {
+        synchronized (mutex) {return m.put(key, value);}
+    }
+    public V remove(Object key) {
+        synchronized (mutex) {return m.remove(key);}
+    }
+    public void clear() {
+        synchronized (mutex) {m.clear();}
+    }
+    ...
+}
+```
+  
+`Collections`类中含有`SynchroniezdList`、`SynchroniezdSet`、`SynchroniezdMap`、`UnmodifiableList`、`UnmodifiableSet`、`UnmodifiableMap`等。可以看出这样的`锁粒度`是很大的，直接对集合`整体加锁`，通常性能在高并发时下降迅速。  
+  
+那么高并发场合，有哪些专用集合类呢？下文分解。  
+  
 #### Java IO
 
 #### Java并发
