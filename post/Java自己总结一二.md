@@ -345,7 +345,7 @@ Node<E> node(int index) {
   
 默认数组容量：10。  
   
-扩容方案：`capacityIncrement`大于0，则当前长度 + `capacityIncrement`；则当前长度 * 2。所以是用户可控的扩容方案。  
+扩容方案：构造函数传入的参数`capacityIncrement`大于0，则当前长度 + `capacityIncrement`；等于0，则当前长度 * 2。所以是用户可控的扩容方案。  
   
 和`ArrayList`的区别在于`add`、`remove`、`get`、`set`、`contains`、`iterator`等均是`synchonized`方法。  
   
@@ -711,7 +711,31 @@ void transfer(Entry[] newTable, boolean rehash) {
 }
 ```
   
-###### 9.TreeMap
+###### 9.HashTable
+底层数据结构：和`HashMap`一样，数组+单向链表（用于解决hash碰撞，链表法）。  
+  
+和`Vector`问题一样，为了线程安全，同步锁粒度太大，不推荐用了！  
+> 一段JDK文档注释
+  
+```java
+/*
+...
+* <p>As of the Java 2 platform v1.2, this class was retrofitted to
+* implement the {@link Map} interface, making it a member of the
+* <a href="{@docRoot}/../technotes/guides/collections/index.html">
+*
+* Java Collections Framework</a>.  Unlike the new collection
+* implementations, {@code Hashtable} is synchronized.  If a
+* thread-safe implementation is not needed, it is recommended to use
+* {@link HashMap} in place of {@code Hashtable}.  If a thread-safe
+* highly-concurrent implementation is desired, then it is recommended
+* to use {@link java.util.concurrent.ConcurrentHashMap} in place of
+* {@code Hashtable}.
+...
+*/
+```
+  
+###### 10.TreeMap
 底层数据结构：红黑树。  
 > 源码
   
@@ -838,7 +862,7 @@ final class KeyIterator extends PrivateEntryIterator<K> {
 ...
 ```
   
-###### 10.LinkedHashMap
+###### 11.LinkedHashMap
 底层数据结构：继承`HashMap`，但是创建双链表保存`HashMap`中的`key-value`对，通过重写父类相关方法，修改双链表，目的在于迭代器遍历，输出有序（支持`插入顺序`、`访问顺序`）。  
 > 源码
   
@@ -912,7 +936,7 @@ private class EntryIterator extends LinkedHashIterator<Map.Entry<K,V>> {
 }
 ```
   
-###### 11.对上面的总结
+###### 12.对上面的总结
 上文描述容器类，都不是线程安全的，多线程环境下涉及迭代器遍历都可能发生`fast-fail`错误。如何实现线程安全的支持？  
   
 一种方式是，`Collections`类包含相当多的静态方法，用于把上述容器类封装为线程安全的容器类，比如`synchronizedMap`、`unmodifiableMap`。`synchronizedMap`是对读写操作加同步锁，`unmodifiableMap`直接只许读不许写。  
