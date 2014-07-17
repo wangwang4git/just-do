@@ -425,6 +425,292 @@ public Iterator<E> iterator() {
 }
 ```
   
+###### 6.TreeSet
+`TreeSet`和`HashSet`的主要不同在于`TreeSet`对排序的支持。  
+  
+底层数据结构：`TreeMap`。  
+> 源码
+  
+```java
+public TreeSet() {
+    this(new TreeMap<E,Object>());
+}
+```
+  
+`put`、`remove`、`iterator`：类同于`HashSet`部分。  
+  
+`TreeSet`增加了对排序方面的支持：比如可指定`Comparator`实现（其实也是设置的`TreeMap`）。  
+  
+###### 7.LinkedHashSet
+忽悠人的家货，直接继承`HashSet`，然后啥新特性都没有，叫`Linked`就是忽悠人。  
+
+###### 8.HashMap
+底层数据结构：数组+单向链表（用于解决hash碰撞，链表法）。
+  
+初始容量`16`,负载因子`0.75`（用于扩容）；其中数组大小只能是2的幂。  
+> 源码
+  
+```java
+...
+/**
+ * The table, resized as necessary. Length MUST Always be a power of two.
+ */
+transient Entry<K,V>[] table;
+...
+static class Entry<K,V> implements Map.Entry<K,V> {
+    final K key;
+    V value;
+    Entry<K,V> next;
+    int hash;
+    ...
+}
+...
+/**
+ * Constructs an empty <tt>HashMap</tt> with the default initial capacity
+ * (16) and the default load factor (0.75).
+ */
+public HashMap() {
+    this(DEFAULT_INITIAL_CAPACITY, DEFAULT_LOAD_FACTOR);
+}
+...
+public HashMap(int initialCapacity, float loadFactor) {
+    if (initialCapacity < 0)
+        throw new IllegalArgumentException("Illegal initial capacity: " +
+                                           initialCapacity);
+    if (initialCapacity > MAXIMUM_CAPACITY)
+        initialCapacity = MAXIMUM_CAPACITY;
+    if (loadFactor <= 0 || Float.isNaN(loadFactor))
+        throw new IllegalArgumentException("Illegal load factor: " +
+                                           loadFactor);
+
+    // Find a power of 2 >= initialCapacity
+    int capacity = 1;
+    while (capacity < initialCapacity)
+        capacity <<= 1;
+
+    this.loadFactor = loadFactor;
+    threshold = (int)Math.min(capacity * loadFactor, MAXIMUM_CAPACITY + 1);
+    table = new Entry[capacity];
+    useAltHashing = sun.misc.VM.isBooted() &&
+            (capacity >= Holder.ALTERNATIVE_HASHING_THRESHOLD);
+    init();
+}
+...
+```
+  
+`put(key, value)`操作：如果`key`为空，取`table[0]`元素进行替换/插入；如果`key`不为空，对`key`两次`hash`，获取存储位置，取出存储位置元素进行替换/插入。插入前需要进行`扩容判断`。  
+> 源码
+  
+```java
+...
+public V put(K key, V value) {
+    if (key == null)
+        return putForNullKey(value);
+    int hash = hash(key);
+    int i = indexFor(hash, table.length);
+    for (Entry<K,V> e = table[i]; e != null; e = e.next) {
+        Object k;
+        if (e.hash == hash && ((k = e.key) == key || key.equals(k))) {
+            V oldValue = e.value;
+            e.value = value;
+            e.recordAccess(this);
+            return oldValue;
+        }
+    }
+
+    modCount++;
+    addEntry(hash, key, value, i);
+    return null;
+}
+...
+private V putForNullKey(V value) {
+    for (Entry<K,V> e = table[0]; e != null; e = e.next) {
+        if (e.key == null) {
+            V oldValue = e.value;
+            e.value = value;
+            e.recordAccess(this);
+            return oldValue;
+        }
+    }
+    modCount++;
+    addEntry(0, null, value, 0);
+    return null;
+}
+...
+final int hash(Object k) {
+    int h = 0;
+    if (useAltHashing) {
+        if (k instanceof String) {
+            return sun.misc.Hashing.stringHash32((String) k);
+        }
+        h = hashSeed;
+    }
+
+    h ^= k.hashCode();
+
+    // This function ensures that hashCodes that differ only by
+    // constant multiples at each bit position have a bounded
+    // number of collisions (approximately 8 at default load factor).
+    h ^= (h >>> 20) ^ (h >>> 12);
+    return h ^ (h >>> 7) ^ (h >>> 4);
+}
+...
+static int indexFor(int h, int length) {
+    return h & (length-1);
+}
+...
+void addEntry(int hash, K key, V value, int bucketIndex) {
+    if ((size >= threshold) && (null != table[bucketIndex])) {
+        resize(2 * table.length);
+        hash = (null != key) ? hash(key) : 0;
+        bucketIndex = indexFor(hash, table.length);
+    }
+
+    createEntry(hash, key, value, bucketIndex);
+}
+...
+void createEntry(int hash, K key, V value, int bucketIndex) {
+    Entry<K,V> e = table[bucketIndex];
+    table[bucketIndex] = new Entry<>(hash, key, value, e);
+    size++;
+}
+...
+```
+  
+`get(key)`、`remove(key)`、`containsKey(key)`操作：都包含两次`hash`操作，单向链表遍历操作，具体参考`put`操作，在此不贴源码。  
+  
+`keySet()`：返回`HashMap`中`key`集合，最常用来做迭代器遍历。  
+> 源码
+  
+```java
+...
+public Set<K> keySet() {
+    Set<K> ks = keySet;
+    return (ks != null ? ks : (keySet = new KeySet()));
+}
+
+private final class KeySet extends AbstractSet<K> {
+    public Iterator<K> iterator() {
+        return newKeyIterator();
+    }
+    public int size() {
+        return size;
+    }
+    public boolean contains(Object o) {
+        return containsKey(o);
+    }
+    public boolean remove(Object o) {
+        return HashMap.this.removeEntryForKey(o) != null;
+    }
+    public void clear() {
+        HashMap.this.clear();
+    }
+}
+...
+```
+  
+`values()`：返回`HashMap`中`value`集合，也是常用来做迭代器遍历。  
+> 源码
+  
+```java
+public Collection<V> values() {
+    Collection<V> vs = values;
+    return (vs != null ? vs : (values = new Values()));
+}
+
+private final class Values extends AbstractCollection<V> {
+    public Iterator<V> iterator() {
+        return newValueIterator();
+    }
+    public int size() {
+        return size;
+    }
+    public boolean contains(Object o) {
+        return containsValue(o);
+    }
+    public void clear() {
+        HashMap.this.clear();
+    }
+}
+```
+  
+`entrySet()`：返回`HashMap`中`key-value`集合，也是常用来做迭代器遍历。  
+> 源码
+  
+```java
+public Set<Map.Entry<K,V>> entrySet() {
+    return entrySet0();
+}
+
+private Set<Map.Entry<K,V>> entrySet0() {
+    Set<Map.Entry<K,V>> es = entrySet;
+    return es != null ? es : (entrySet = new EntrySet());
+}
+
+private final class EntrySet extends AbstractSet<Map.Entry<K,V>> {
+    public Iterator<Map.Entry<K,V>> iterator() {
+        return newEntryIterator();
+    }
+    public boolean contains(Object o) {
+        if (!(o instanceof Map.Entry))
+            return false;
+        Map.Entry<K,V> e = (Map.Entry<K,V>) o;
+        Entry<K,V> candidate = getEntry(e.getKey());
+        return candidate != null && candidate.equals(e);
+    }
+    public boolean remove(Object o) {
+        return removeMapping(o) != null;
+    }
+    public int size() {
+        return size;
+    }
+    public void clear() {
+        HashMap.this.clear();
+    }
+}
+```
+  
+其中上文三个操作`keySet`、`values`、`entrySet`，返回的迭代器均是继承至`HashIterator`，通过修改`next()`返回对应的数据（key、value、entry）。  
+  
+扩容操作：也就是常说的rehash，新建entry数组，然后遍历老数组entry对象，进行put。注意如果发生hash碰撞，entry对象添加在单链表的头部。多线程环境下，这里可能会导致`get`操作死循环，CPU直接跑满！[传送门]("./简单说说HashMap，HashTable，ConcurrentHashTable.md")  
+> 源码
+  
+```java
+void resize(int newCapacity) {
+    Entry[] oldTable = table;
+    int oldCapacity = oldTable.length;
+    if (oldCapacity == MAXIMUM_CAPACITY) {
+        threshold = Integer.MAX_VALUE;
+        return;
+    }
+
+    Entry[] newTable = new Entry[newCapacity];
+    boolean oldAltHashing = useAltHashing;
+    useAltHashing |= sun.misc.VM.isBooted() &&
+            (newCapacity >= Holder.ALTERNATIVE_HASHING_THRESHOLD);
+    boolean rehash = oldAltHashing ^ useAltHashing;
+    transfer(newTable, rehash);
+    table = newTable;
+    threshold = (int)Math.min(newCapacity * loadFactor, MAXIMUM_CAPACITY + 1);
+}
+
+void transfer(Entry[] newTable, boolean rehash) {
+    int newCapacity = newTable.length;
+    for (Entry<K,V> e : table) {
+        while(null != e) {
+            Entry<K,V> next = e.next;
+            if (rehash) {
+                e.hash = null == e.key ? 0 : hash(e.key);
+            }
+            int i = indexFor(e.hash, newCapacity);
+            e.next = newTable[i];
+            newTable[i] = e;
+            e = next;
+        }
+    }
+}
+```
+  
 
 #### Java IO
 
