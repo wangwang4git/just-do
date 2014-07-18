@@ -1,6 +1,14 @@
 ## Java一二
 
-#### Java内存泄露
+目录
+* [Java内存泄露](#JavaMemoryLeak)
+* [Java垃圾收集](#JavaGrabageCollection)
+  * [运行时数据区域划分](#GC-01)
+  * [垃圾收集理论部分](#GC-02)
+  * [典型垃圾收集器](#GC-03)
+
+
+<h4 id="JavaMemoryLeak">Java内存泄露</h4>
 对于Java这一类`内存托管`语言，内存泄露的主要原因：保留下来却永远不再使用的对象引用。  
 > 内存泄露示例  
 
@@ -15,8 +23,8 @@ for (int i = 0; i < 10; ++i) {
 
 对于C/C++来说，内存泄露的范围更大一些，有些对象被分配了内存空间，然后却不可达，这些内存将永远收不回来；而在Java中，这些对象可由GC回收。  
 
-#### Java[垃圾收集][1]
-###### 1.运行时数据区域划分  
+<h4 id="JavaGrabageCollection">Java垃圾收集</h4>[参考][1]
+<h6 id="GC-01">1.运行时数据区域划分</h6>
 JVM执行Java程序会把它所管理的内存划分为若干个不同的数据区域。  
 > JVM运行时数据区
   
@@ -24,7 +32,7 @@ JVM执行Java程序会把它所管理的内存划分为若干个不同的数据�
   
 垃圾收集`堆`、`方法区`，其他区域不管。  
   
-###### 2.垃圾收集理论部分
+<h6 id="GC-02">2.垃圾收集理论部分</h6>
 垃圾收集需要完成的三件事情：那些内存需要回收？什么时候回收？如何回收？  
   
 定位待回收对象，采用`根搜索算法（GC Roots Tracing）`，而不是单纯的`引用计数算法`。  
@@ -34,7 +42,7 @@ JVM执行Java程序会把它所管理的内存划分为若干个不同的数据�
   
 什么时候回收对象，一方面是说内存分配满足特定的垃圾收集器设定的阈值，触发收集；另一方面是程序线程执行到相关`安全点`/`安全区域`，垃圾收集器执行相关收集工作。  
 
-###### 3.典型垃圾收集器  
+<h6 id="GC-03">3.典型垃圾收集器</h6>
 > HotSpot JVM垃圾收集器
   
 <center>![alt text](../img/Java一二02.png "HotSpot垃圾收集器")</center>  
@@ -939,7 +947,7 @@ private class EntryIterator extends LinkedHashIterator<Map.Entry<K,V>> {
 ###### 12.对上面的总结
 上文描述容器类，都不是线程安全的，多线程环境下涉及迭代器遍历都可能发生`fast-fail`错误。如何实现线程安全的支持？  
   
-一种方式是，`Collections`类包含相当多的静态方法，用于把上述容器类封装为线程安全的容器类，比如`synchronizedMap`、`unmodifiableMap`。`synchronizedMap`是对读写操作加同步锁，`unmodifiableMap`直接只许读不许写。  
+一种方式是，`Collections`类包含相当多的静态方法，用于把上述容器类封装为线程安全的容器类（`适配器模式`），比如`synchronizedMap`、`unmodifiableMap`。`synchronizedMap`是对读写操作加同步锁，`unmodifiableMap`直接只许读不许写。  
 > 源码
   
 ```java
@@ -969,6 +977,348 @@ private static class SynchronizedMap<K,V> implements Map<K,V>, Serializable {
   
 那么高并发场合，有哪些专用集合类呢？下文分解。  
   
+###### 13.ConcurrentHashMap
+底层数据结构：`Segment`数组（用于分段加锁），其中每一个`Segment`相当于一个`HashMap`，包含一个存放`key-value`的数组`HashEntry`。  
+  
+默认参数：`loadFactor`=0.75，`concurrencyLevel`=16（用于确定`Segment`数组大小），`initialCapacity`=16（与`concurrencyLevel`一起确定每一个`Segment`中`HashEntry`数组大小）。  
+> 源码
+  
+```java
+public ConcurrentHashMap(int initialCapacity,
+                         float loadFactor, int concurrencyLevel) {
+    if (!(loadFactor > 0) || initialCapacity < 0 || concurrencyLevel <= 0)
+        throw new IllegalArgumentException();
+    if (concurrencyLevel > MAX_SEGMENTS)
+        concurrencyLevel = MAX_SEGMENTS;
+    // Find power-of-two sizes best matching arguments
+    int sshift = 0;
+    int ssize = 1;
+    while (ssize < concurrencyLevel) {
+        ++sshift;
+        ssize <<= 1;
+    }
+    this.segmentShift = 32 - sshift;
+    this.segmentMask = ssize - 1;
+    if (initialCapacity > MAXIMUM_CAPACITY)
+        initialCapacity = MAXIMUM_CAPACITY;
+    int c = initialCapacity / ssize;
+    if (c * ssize < initialCapacity)
+        ++c;
+    int cap = MIN_SEGMENT_TABLE_CAPACITY;
+    while (cap < c)
+        cap <<= 1;
+    // create segments and segments[0]
+    Segment<K,V> s0 =
+        new Segment<K,V>(loadFactor, (int)(cap * loadFactor),
+                         (HashEntry<K,V>[])new HashEntry[cap]);
+    Segment<K,V>[] ss = (Segment<K,V>[])new Segment[ssize];
+    UNSAFE.putOrderedObject(ss, SBASE, s0); // ordered write of segments[0]
+    this.segments = ss;
+}
+```
+  
+> 图示，[参考][2]
+  
+<center>![img txt](../img/Java一二05.png "ConcurrentHashMap")</center>
+  
+重点介绍`put`操作：首先根据`key`两次`hash`（对`key.hashCode()`再`hash`），然后根据`hash`值确定`Segment`数组下标，如果对应数组元素不存在，则在`ensureSegment()`中根据模板创建；最后调用`Segment`插入操作。  
+> 源码
+  
+```java
+public V put(K key, V value) {
+    Segment<K,V> s;
+    if (value == null)
+        throw new NullPointerException();
+    int hash = hash(key);
+    int j = (hash >>> segmentShift) & segmentMask;
+    if ((s = (Segment<K,V>)UNSAFE.getObject          // nonvolatile; recheck
+         (segments, (j << SSHIFT) + SBASE)) == null) //  in ensureSegment
+        s = ensureSegment(j);
+    return s.put(key, hash, value, false);
+}
+```
+  
+在`Segment`中插入时，和`HashMap`插入方式一样，不同点是，`Segment`先锁住自己，完成插入后，释放锁。  
+> 源码
+  
+```java
+final V put(K key, int hash, V value, boolean onlyIfAbsent) {
+    HashEntry<K,V> node = tryLock() ? null :
+        scanAndLockForPut(key, hash, value);
+    V oldValue;
+    try {
+        HashEntry<K,V>[] tab = table;
+        int index = (tab.length - 1) & hash;
+        HashEntry<K,V> first = entryAt(tab, index);
+        for (HashEntry<K,V> e = first;;) {
+            if (e != null) {
+                K k;
+                if ((k = e.key) == key ||
+                    (e.hash == hash && key.equals(k))) {
+                    oldValue = e.value;
+                    if (!onlyIfAbsent) {
+                        e.value = value;
+                        ++modCount;
+                    }
+                    break;
+                }
+                e = e.next;
+            }
+            else {
+                if (node != null)
+                    node.setNext(first);
+                else
+                    node = new HashEntry<K,V>(hash, key, value, first);
+                int c = count + 1;
+                if (c > threshold && tab.length < MAXIMUM_CAPACITY)
+                    rehash(node);
+                else
+                    setEntryAt(tab, index, node);
+                ++modCount;
+                count = c;
+                oldValue = null;
+                break;
+            }
+        }
+    } finally {
+        unlock();
+    }
+    return oldValue;
+}
+```
+  
+其中`rehash()`扩容方案，新容量是旧容量的**两倍**（`int newCapacity = oldCapacity << 1;`）。  
+> 源码
+  
+```java
+private void rehash(HashEntry<K,V> node) {
+    HashEntry<K,V>[] oldTable = table;
+    int oldCapacity = oldTable.length;
+    int newCapacity = oldCapacity << 1;
+    threshold = (int)(newCapacity * loadFactor);
+    HashEntry<K,V>[] newTable =
+        (HashEntry<K,V>[]) new HashEntry[newCapacity];
+    int sizeMask = newCapacity - 1;
+    for (int i = 0; i < oldCapacity ; i++) {
+        HashEntry<K,V> e = oldTable[i];
+        if (e != null) {
+            HashEntry<K,V> next = e.next;
+            int idx = e.hash & sizeMask;
+            if (next == null)   //  Single node on list
+                newTable[idx] = e;
+            else { // Reuse consecutive sequence at same slot
+                HashEntry<K,V> lastRun = e;
+                int lastIdx = idx;
+                for (HashEntry<K,V> last = next;
+                     last != null;
+                     last = last.next) {
+                    int k = last.hash & sizeMask;
+                    if (k != lastIdx) {
+                        lastIdx = k;
+                        lastRun = last;
+                    }
+                }
+                newTable[lastIdx] = lastRun;
+                // Clone remaining nodes
+                for (HashEntry<K,V> p = e; p != lastRun; p = p.next) {
+                    V v = p.value;
+                    int h = p.hash;
+                    int k = h & sizeMask;
+                    HashEntry<K,V> n = newTable[k];
+                    newTable[k] = new HashEntry<K,V>(h, p.key, v, n);
+                }
+            }
+        }
+    }
+    int nodeIndex = node.hash & sizeMask; // add the new node
+    node.setNext(newTable[nodeIndex]);
+    newTable[nodeIndex] = node;
+    table = newTable;
+}
+```
+  
+`remove`操作：首先根据`key`两次`hash`（对`key.hashCode()`再`hash`），然后根据`hash`值确定`Segment`数组下标，获取数组元素；最后调用`Segment`删除操作（内部有加锁处理）。  
+  
+`get`操作：首先根据`key`两次`hash`（对`key.hashCode()`再`hash`），然后根据`hash`值确定`Segment`数组下标，获取数组元素；最后调用`Segment`读取操作（**没有加锁处理**）。  
+
+`size`操作：尝试不加锁遍历两遍，统计前后遍历的`modCount`和是否相等，相等则返回`size`；不等，全部加锁统计。  
+> 源码
+  
+```java
+public int size() {
+    // Try a few times to get accurate count. On failure due to
+    // continuous async changes in table, resort to locking.
+    final Segment<K,V>[] segments = this.segments;
+    int size;
+    boolean overflow; // true if size overflows 32 bits
+    long sum;         // sum of modCounts
+    long last = 0L;   // previous sum
+    int retries = -1; // first iteration isn't retry
+    try {
+        for (;;) {
+            if (retries++ == RETRIES_BEFORE_LOCK) {
+                for (int j = 0; j < segments.length; ++j)
+                    ensureSegment(j).lock(); // force creation
+            }
+            sum = 0L;
+            size = 0;
+            overflow = false;
+            for (int j = 0; j < segments.length; ++j) {
+                Segment<K,V> seg = segmentAt(segments, j);
+                if (seg != null) {
+                    sum += seg.modCount;
+                    int c = seg.count;
+                    if (c < 0 || (size += c) < 0)
+                        overflow = true;
+                }
+            }
+            if (sum == last)
+                break;
+            last = sum;
+        }
+    } finally {
+        if (retries > RETRIES_BEFORE_LOCK) {
+            for (int j = 0; j < segments.length; ++j)
+                segmentAt(segments, j).unlock();
+        }
+    }
+    return overflow ? Integer.MAX_VALUE : size;
+}
+```
+  
+###### 14.CopyOnWriteArrayList
+读时不加锁，写时写入副本，写完切换数组引用。  
+  
+底层数据结构：Object[]。  
+  
+默认数组容量：0。  
+> 源码
+  
+```java
+private volatile transient Object[] array;
+
+public CopyOnWriteArrayList() {
+    setArray(new Object[0]);
+}
+```
+  
+`add`操作：加锁，复制副本，写副本，切换数组引用，解锁。  
+> 源码
+
+```java
+public boolean add(E e) {
+    final ReentrantLock lock = this.lock;
+    lock.lock();
+    try {
+        Object[] elements = getArray();
+        int len = elements.length;
+        Object[] newElements = Arrays.copyOf(elements, len + 1);
+        newElements[len] = e;
+        setArray(newElements);
+        return true;
+    } finally {
+        lock.unlock();
+    }
+}
+```
+
+`remove`操作：加锁，新建空副本，写空副本，按条件判断是否切换数组引用，解锁。  
+> 源码
+  
+```java
+public boolean remove(Object o) {
+    final ReentrantLock lock = this.lock;
+    lock.lock();
+    try {
+        Object[] elements = getArray();
+        int len = elements.length;
+        if (len != 0) {
+            // Copy while searching for element to remove
+            // This wins in the normal case of element being present
+            int newlen = len - 1;
+            Object[] newElements = new Object[newlen];
+
+            for (int i = 0; i < newlen; ++i) {
+                if (eq(o, elements[i])) {
+                    // found one;  copy remaining and exit
+                    for (int k = i + 1; k < len; ++k)
+                        newElements[k-1] = elements[k];
+                    setArray(newElements);
+                    return true;
+                } else
+                    newElements[i] = elements[i];
+            }
+
+            // special handling for last cell
+            if (eq(o, elements[newlen])) {
+                setArray(newElements);
+                return true;
+            }
+        }
+        return false;
+    } finally {
+        lock.unlock();
+    }
+}
+```
+  
+`get`操作：直接数组下标取值，不加锁，可能会取到`脏数据`，但是效率非常高，对于`读多写少`、`脏数据不敏感`场合特别适合。  
+> 源码
+  
+```java
+private E get(Object[] a, int index) {
+    return (E) a[index];
+}
+```
+  
+###### 16.CopyOnWriteArraySet
+基于对`CopyOnWriteArrayList`的封装。  
+> 源码
+  
+```java
+private final CopyOnWriteArrayList<E> al;
+
+public CopyOnWriteArraySet() {
+    al = new CopyOnWriteArrayList<E>();
+}
+```
+  
+`add`操作：调用`CopyOnWriteArrayList`的`addIfAbsent()`。  
+> 源码
+  
+```java
+public boolean add(E e) {
+    return al.addIfAbsent(e);
+}
+```
+> 其中`CopyOnWriteArrayList`的`addIfAbsent()`方法定义如下，涉及到加锁、遍历
+  
+```java
+public boolean addIfAbsent(E e) {
+    final ReentrantLock lock = this.lock;
+    lock.lock();
+    try {
+        // Copy while checking if already present.
+        // This wins in the most common case where it is not present
+        Object[] elements = getArray();
+        int len = elements.length;
+        Object[] newElements = new Object[len + 1];
+        for (int i = 0; i < len; ++i) {
+            if (eq(e, elements[i]))
+                return false; // exit, throwing away copy
+            else
+                newElements[i] = elements[i];
+        }
+        newElements[len] = e;
+        setArray(newElements);
+        return true;
+    } finally {
+        lock.unlock();
+    }
+}
+```
+
+
 #### Java IO
 
 #### Java并发
@@ -977,5 +1327,7 @@ private static class SynchronizedMap<K,V> implements Map<K,V>, Serializable {
 ---
 #### 书籍列表
 1. [深入理解Java虚拟机][1]
+2. [ConcurrentHashMap分析][2]
 
 [1]: http://book.douban.com/subject/24722612/
+[2]: http://my.oschina.net/indestiny/blog/209458
