@@ -31,6 +31,8 @@
   * [ConcurrentHashMap](./Java自己总结一二.md#JC.13)
   * [CopyOnWriteArrayList](./Java自己总结一二.md#JC.14)
   * [CopyOnWriteArraySet](./Java自己总结一二.md#JC.15)
+  * [ArrayBlockingQueue](./Java自己总结一二.md#JC.16)
+  * [LinkedBlockingQueue](./Java自己总结一二.md#JC.17)
 
 
 #### <a name="JavaMemoryLeak">Java内存泄露</a>
@@ -1342,7 +1344,190 @@ public boolean addIfAbsent(E e) {
     }
 }
 ```
+  
+###### <a name="JC.16">16.ArrayBlockingQueue</a>
+底层数据结构：Object[]，双指针`putIndex`、`takeIndex`（循环递增），先进先出，线程安全。  
+> 源码
+  
+```java
+public ArrayBlockingQueue(int capacity, boolean fair) {
+    if (capacity <= 0)
+        throw new IllegalArgumentException();
+    this.items = new Object[capacity];
+    lock = new ReentrantLock(fair);
+    notEmpty = lock.newCondition();
+    notFull =  lock.newCondition();
+}
+```
+  
+三个入队操作：`put(e)`：如果队列满则一直阻塞。
+> 源码
+  
+```java
+public void put(E e) throws InterruptedException {
+    checkNotNull(e);
+    final ReentrantLock lock = this.lock;
+    lock.lockInterruptibly();
+    try {
+        while (count == items.length)
+            notFull.await();
+        insert(e);
+    } finally {
+        lock.unlock();
+    }
+}
+```
+  
+`offer(e)`：如果队列满则返回失败。
+> 源码
+  
+```java
+public boolean offer(E e) {
+    checkNotNull(e);
+    final ReentrantLock lock = this.lock;
+    lock.lock();
+    try {
+        if (count == items.length)
+            return false;
+        else {
+            insert(e);
+            return true;
+        }
+    } finally {
+        lock.unlock();
+    }
+}
+```
+  
+`offer(e, timeout, timeunit)`：如果队列满则`指定时间阻塞`，队列指定时间内一直满则返回失败。
+> 源码
+  
+```java
+public boolean offer(E e, long timeout, TimeUnit unit)
+    throws InterruptedException {
 
+    checkNotNull(e);
+    long nanos = unit.toNanos(timeout);
+    final ReentrantLock lock = this.lock;
+    lock.lockInterruptibly();
+    try {
+        while (count == items.length) {
+            if (nanos <= 0)
+                return false;
+            nanos = notFull.awaitNanos(nanos);
+        }
+        insert(e);
+        return true;
+    } finally {
+        lock.unlock();
+    }
+}
+```
+  
+三个出队操作：`poll()`：如果队列空则返回`null`。
+> 源码
+  
+```java
+public E poll() {
+    final ReentrantLock lock = this.lock;
+    lock.lock();
+    try {
+        return (count == 0) ? null : extract();
+    } finally {
+        lock.unlock();
+    }
+}
+```
+
+`poll(timeout, timeunit)`:如果队列空则`指定时间阻塞`，队列指定时间内一直空则返回`null`。
+> 源码
+  
+```java
+public E poll(long timeout, TimeUnit unit) throws InterruptedException {
+    long nanos = unit.toNanos(timeout);
+    final ReentrantLock lock = this.lock;
+    lock.lockInterruptibly();
+    try {
+        while (count == 0) {
+            if (nanos <= 0)
+                return null;
+            nanos = notEmpty.awaitNanos(nanos);
+        }
+        return extract();
+    } finally {
+        lock.unlock();
+    }
+}
+```
+  
+`take()`：如果队列空则一直阻塞。
+> 源码
+  
+```java
+public E take() throws InterruptedException {
+    final ReentrantLock lock = this.lock;
+    lock.lockInterruptibly();
+    try {
+        while (count == 0)
+            notEmpty.await();
+        return extract();
+    } finally {
+        lock.unlock();
+    }
+}
+```
+  
+###### <a name="JC.17">17.LinkedBlockingQueue</a>
+底层数据结构：单向链表，头指针，尾指针，入队锁（用于入队操作加锁），出队锁（用于出队操作加锁）。  
+> 源码
+  
+```java
+static class Node<E> {
+    E item;
+
+    /**
+     * One of:
+     * - the real successor Node
+     * - this Node, meaning the successor is head.next
+     * - null, meaning there is no successor (this is the last node)
+     */
+    Node<E> next;
+
+    Node(E x) { item = x; }
+}
+
+/**
+ * Head of linked list.
+ * Invariant: head.item == null
+ */
+private transient Node<E> head;
+
+/**
+ * Tail of linked list.
+ * Invariant: last.next == null
+ */
+private transient Node<E> last;
+
+/** Lock held by take, poll, etc */
+private final ReentrantLock takeLock = new ReentrantLock();
+
+/** Wait queue for waiting takes */
+private final Condition notEmpty = takeLock.newCondition();
+
+/** Lock held by put, offer, etc */
+private final ReentrantLock putLock = new ReentrantLock();
+
+/** Wait queue for waiting puts */
+private final Condition notFull = putLock.newCondition();
+
+public LinkedBlockingQueue(int capacity) {
+    if (capacity <= 0) throw new IllegalArgumentException();
+    this.capacity = capacity;
+    last = head = new Node<E>(null);
+}
+```
+  
+因为有入队锁、出队锁两把锁，所以入队、出队操作不需要锁整体，效率相对`ArrayBlockingQueue`高；遍历、删除操作则需要两把锁同时锁住。  
 
 #### Java IO
 
