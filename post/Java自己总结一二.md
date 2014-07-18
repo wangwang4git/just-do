@@ -1,14 +1,23 @@
 ## Java一二
 
 目录
-* [Java内存泄露](#JavaMemoryLeak)
-* [Java垃圾收集](#JavaGrabageCollection)
-  * [运行时数据区域划分](#GC-01)
-  * [垃圾收集理论部分](#GC-02)
+* [Java内存泄露](./Java自己总结一二.md#JavaMemoryLeak)
+* [Java垃圾收集](./Java自己总结一二.md#JavaGrabageCollection)
+  * [运行时数据区域划分](./Java自己总结一二.md#GC.01)
+  * [垃圾收集理论部分](./Java自己总结一二.md#GC.02)
   * [典型垃圾收集器](./Java自己总结一二.md#GC.03)
+* [Java Object](./Java自己总结一二.md#JavaObject)
+  * [toString](./Java自己总结一二.md#JO.01)
+  * [hashCode](./Java自己总结一二.md#JO.02)
+  * [equals](./Java自己总结一二.md#JO.03)
+  * [clone](./Java自己总结一二.md#JO.04)
+  * [wait](./Java自己总结一二.md#JO.05)
+  * [notify](./Java自己总结一二.md#JO.06)
+  * [getClass](./Java自己总结一二.md#JO.07)
+  * [fianlize](./Java自己总结一二.md#JO.08)
 
 
-<h4 id="JavaMemoryLeak">Java内存泄露</h4>
+#### <a name="JavaMemoryLeak">Java内存泄露</a>
 对于Java这一类`内存托管`语言，内存泄露的主要原因：保留下来却永远不再使用的对象引用。  
 > 内存泄露示例  
 
@@ -23,8 +32,8 @@ for (int i = 0; i < 10; ++i) {
 
 对于C/C++来说，内存泄露的范围更大一些，有些对象被分配了内存空间，然后却不可达，这些内存将永远收不回来；而在Java中，这些对象可由GC回收。  
 
-<h4 id="JavaGrabageCollection">Java垃圾收集</h4>[参考][1]
-<h6 id="GC-01">1.运行时数据区域划分</h6>
+#### <a name="JavaGrabageCollection">Java[垃圾收集][1]</a>
+###### <a name="GC.01">1.运行时数据区域划分</a>
 JVM执行Java程序会把它所管理的内存划分为若干个不同的数据区域。  
 > JVM运行时数据区
   
@@ -32,7 +41,7 @@ JVM执行Java程序会把它所管理的内存划分为若干个不同的数据�
   
 垃圾收集`堆`、`方法区`，其他区域不管。  
   
-<h6 id="GC-02">2.垃圾收集理论部分</h6>
+###### <a id="GC.02">2.垃圾收集理论部分</a>
 垃圾收集需要完成的三件事情：那些内存需要回收？什么时候回收？如何回收？  
   
 定位待回收对象，采用`根搜索算法（GC Roots Tracing）`，而不是单纯的`引用计数算法`。  
@@ -42,7 +51,7 @@ JVM执行Java程序会把它所管理的内存划分为若干个不同的数据�
   
 什么时候回收对象，一方面是说内存分配满足特定的垃圾收集器设定的阈值，触发收集；另一方面是程序线程执行到相关`安全点`/`安全区域`，垃圾收集器执行相关收集工作。  
 
-###### <a name="GC.03"/>3.典型垃圾收集器
+###### <a name="GC.03">3.典型垃圾收集器</a>
 > HotSpot JVM垃圾收集器
   
 <center>![alt text](../img/Java一二02.png "HotSpot垃圾收集器")</center>  
@@ -51,11 +60,11 @@ JVM执行Java程序会把它所管理的内存划分为若干个不同的数据�
   
 JVM调优会涉及到垃圾收集器选择与设置。  
   
-#### Java Object
-###### 1.toString()
+#### <a name="JavaObject">Java Object</a>
+###### <a name="JO.01">1.toString()</a>
 用于显示调用输出对象信息，或者`this + "string"`字符串重载`+`运算符形式，将`this`转为`String`类型（隐式调用）。  
   
-###### 2.hashCode()
+###### <a name="JO.02">2.hashCode()</a>
 用于`HashMap`中元素增删改查时`Key`的`Hash`操作。
 > JDK`HashMap`的`hash()`源码如下
   
@@ -96,7 +105,7 @@ public int hashCode() {
 }
 ```
   
-###### 3.equals()
+###### <a name="JO.03">3.equals()</a>
 用于对象相等测试，比如容器`indexOf()`、`remove()`、`contains()`等函数中。  
 > JDK`ArrayList`的`indexOf()`源码如下
   
@@ -145,7 +154,7 @@ public boolean equals(Object o) {
 }
 ```
   
-###### 4.clone()
+###### <a name="JO.04">4.clone()</a>
 注意浅复制与深复制。  
   
 Object中默认的实现是一个浅复制，如果要实现深复制，必须对类中可变域生成新的实例。  
@@ -175,10 +184,10 @@ class ClassB implements Cloneable {
 }
 ```
   
-###### 5.多个wait()
+###### <a name="JO.05">5.多个wait()</a>
 用于多线程同步，阻塞线程，注意：`wait()`函数的调用必须先获取`锁`。  
   
-###### 6.notify()/notifyAll()
+###### <a name="JO.06">6.notify()/notifyAll()</a>
 用于多线程同步，唤醒线程，注意：`notify()`/`notifyAll()`函数的调用必须先获取`锁`（与`wait()`调用时同一个`锁`）。  
 > 典型用法
   
@@ -221,12 +230,12 @@ try {
 }
 ```
   
-###### 8.getClass()
+###### <a name="JO.07">7.getClass()</a>
 获取`Class`对象，它包含了与类有关的信息，用于`RTTI`。事实上，Class对象就是用来创建类的所有`常规`对象的。  
   
 每一个类都有一个Class对象。  
   
-###### 9.fianlize()
+###### <a name="JO.08">8.fianlize()</a>
 一旦垃圾回收器准备好释放对象占用的存储空间，将首先调用其`finalize`方法，并且在下一次垃圾回收动作发生时，才会真正回收对象占用的内存。  
   
 潜在的编程陷进：将`finalize()`等同于C++析构函数。对象被回收的时机是不确定的，也可能永远不会被回收，如果资源的释放依赖于`finalize()`，那么释放可能永远也不会发生。  
