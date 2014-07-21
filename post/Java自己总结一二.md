@@ -33,6 +33,9 @@
   * [CopyOnWriteArraySet](./Java自己总结一二.md#JC.15)
   * [ArrayBlockingQueue](./Java自己总结一二.md#JC.16)
   * [LinkedBlockingQueue](./Java自己总结一二.md#JC.17)
+* [JavaConcurrent](./Java自己总结一二.md#JavaConcurrent)
+  * [AtomicInteger](./Java自己总结一二.md#JCon.01)
+  * [ThreadPoolExecutor](./Java自己总结一二.md#JCon.02)
 
 
 #### <a name="JavaMemoryLeak">Java内存泄露</a>
@@ -1529,15 +1532,66 @@ public LinkedBlockingQueue(int capacity) {
   
 因为有入队锁、出队锁两把锁，所以入队、出队操作不需要锁整体，效率相对`ArrayBlockingQueue`高；遍历、删除操作则需要两把锁同时锁住。  
 
-#### Java IO
+#### <a name="JavaConcurrent">Java Concurrent</a>
+Java并发包，JDK1.5引入，包含三大块：原子类，并发容器（上文Java容器有讲解），同步工具`Lock`、`Condition`。  
+  
+参考Java并发[历史][3]。
+  
+先说说`原子操作类`。  
 
-#### Java并发
-
+###### <a name="JCon.01">1.AtomicInteger</a>
+用于递增、递减等原子操作。  
+  
+`incrementAndGet(value)`：获取递增1后的值，无锁实现，调用`unsafe.compareAndSwap()`，native方法，底层C代码直接调用`CAS`汇编代码。  
+> 源码
+  
+```java
+public final int incrementAndGet() {
+    for (;;) {
+        int current = get();
+        int next = current + 1;
+        if (compareAndSet(current, next))
+            return next;
+    }
+}
+```
+  
+下面简单说说`ThreadPoolExecutor`、`Executors`。  
+###### <a name="JCon.02">2.ThreadPoolExecutor</a>
+底层数据结构：`BlockingQueue<Runnable> workQueue`。
+> 构造函数
+  
+```java
+public ThreadPoolExecutor(int corePoolSize,
+                          int maximumPoolSize,
+                          long keepAliveTime,
+                          TimeUnit unit,
+                          BlockingQueue<Runnable> workQueue,
+                          ThreadFactory threadFactory,
+                          RejectedExecutionHandler handler) {
+    if (corePoolSize < 0 ||
+        maximumPoolSize <= 0 ||
+        maximumPoolSize < corePoolSize ||
+        keepAliveTime < 0)
+        throw new IllegalArgumentException();
+    if (workQueue == null || threadFactory == null || handler == null)
+        throw new NullPointerException();
+    this.corePoolSize = corePoolSize;
+    this.maximumPoolSize = maximumPoolSize;
+    this.workQueue = workQueue;
+    this.keepAliveTime = unit.toNanos(keepAliveTime);
+    this.threadFactory = threadFactory;
+    this.handler = handler;
+}
+```
+  
 
 ---
 #### 书籍列表
 1. [深入理解Java虚拟机][1]
 2. [ConcurrentHashMap分析][2]
+3. [Java多线程发展简史][3]
 
 [1]: http://book.douban.com/subject/24722612/
 [2]: http://my.oschina.net/indestiny/blog/209458
+[3]: http://www.raychase.net/698
