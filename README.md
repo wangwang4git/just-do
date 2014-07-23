@@ -4,7 +4,7 @@ just-do
 for my job...
 
 ----
-[resume](./resume/王汪-简历-社招.md)
+[resume](./resume/resume.md)
 
 ## list
 1. [Android WebView Java与JavaScript互调](./post/Android WebView Java与JavaScript互调.md)
