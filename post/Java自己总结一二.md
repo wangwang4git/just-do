@@ -36,6 +36,7 @@
 * [JavaConcurrent](./Java自己总结一二.md#JavaConcurrent)
   * [AtomicInteger](./Java自己总结一二.md#JCon.01)
   * [ThreadPoolExecutor](./Java自己总结一二.md#JCon.02)
+* [Java泛型](./Java自己总结一二.md#JavaGenerics)
 
 
 #### <a name="JavaMemoryLeak">Java内存泄露</a>
@@ -1585,6 +1586,12 @@ public ThreadPoolExecutor(int corePoolSize,
 }
 ```
   
+
+#### <a name="JavaGenerics">Java泛型</a>
+Java泛型中`wildcard`的掌握。  
+* <?>
+* <? extends ClassA>
+* <? super ClassA>
 
 ---
 #### 书籍列表
