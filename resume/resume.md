@@ -47,7 +47,7 @@
 
 **4. 搜狐相册APP**
 * Android手机本地图片云备份、管理工具，支持时间、地点、相册三维度图片浏览。
-* 负责APP开发，NDK，MediaStore，学习UIL库。
+* 负责APP开发，NDK，MediaStore，UIL库学习。
 
 **5. 武汉大学BBS APP**
 * BBS Android客户端第一版，登陆用户看贴、回帖、发帖，账户管理，匿名用户看贴、回帖。
