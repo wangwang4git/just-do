@@ -4,6 +4,10 @@
   
 * `RoboSpice`，用于异步网络请求，解决`AsyncTask`、`Loader`设计问题，[主页][2]。
   
+* `Dagger`，Android平台依赖注入，解耦与模块化，[主页][4]。
+  
+* `RoboGuice`，依赖注入库，[主页][5]。
+  
 ----
 #### Android应用架构经验
 
@@ -13,3 +17,5 @@
 [1]: https://github.com/nhachicha/SnappyDB "SnappyDB"
 [2]: https://github.com/stephanenicolas/robospice "RoboSpice"
 [3]: http://blog.jobbole.com/66606/
+[4]: http://square.github.io/dagger/ "Dagger"
+[5]: https://github.com/roboguice/roboguice "RoboGuice"
