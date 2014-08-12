@@ -18,6 +18,7 @@ for my job...
 9. [Android开发规范系列](./post/Android开发规范系列.md)
 10. [Java自己总结一二](./post/Java自己总结一二.md)
 11. [数据结构总结一二](./post/数据结构总结一二.md)
+12. [Android三方库&应用架构](./post/Android三方库&应用架构.md)
 
 ## TO DO LIST
 - [ ] Android开发规范系列
