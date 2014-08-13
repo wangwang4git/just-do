@@ -35,6 +35,7 @@
 | adb push 源文件 目标文件 | 从本地向当前设备/模拟器拷贝文件 |
 
 注意：使用`adb shell`进入设备`shell`环境，但是该shell环境很多工具都没有，比如`grep`，因为Android删除了部分Linux标准工具。如果想使用这些工具，可以在越狱的手机上安装[`Busybox`][3]。  
+同时`shell`环境下，有一个有用的命令`dumpsys`，用来显示当前系统/应用信息。比如想显示`快站管理App`的当前`Activity`信息，可以使用`adb shell dumpsys activity com.sohu.zhan.zhanmanager`命令。
   
 * `dx`
   
