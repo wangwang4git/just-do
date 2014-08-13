@@ -25,4 +25,4 @@
 [5]: https://github.com/roboguice/roboguice "RoboGuice"
 [6]: http://loopj.com/android-smart-image-view/ "SmartImageView"
 [7]: https://github.com/nostra13/Android-Universal-Image-Loader "UniversalImageLoader"
-[8]: ./post/UIL学习.md "UIL学习笔记"
+[8]: ./UIL学习.md "UIL学习笔记"
