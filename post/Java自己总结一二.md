@@ -315,6 +315,17 @@ private void grow(int minCapacity) {
   
 迭代器遍历：`iterator()`方法返回`AbstractList`内部类`Itr`对象（`ArrayList`同样存在一份可选`Itr`内部类）。迭代器内部`next()`、`remove()`有`快速失败`检查。也包含`listIterator()`，参见`LinkedList`部分。  
   
+**UPDATE: **在JDK1.7.0_40，对`ArrayList`有修改，创建空`ArrayList`时，底层数据结构为空数组，用于节省内存开销，[参考][4]，参考如下  
+  
+```java
+private static final Object[] EMPTY_ELEMENTDATA = {};
+
+public ArrayList() {
+  super();
+  this.elementData = EMPTY_ELEMENTDATA;
+}
+```
+  
 ###### <a name="JC.02">2.LinkedList</a>
 底层数据结构：`双向链表`。  
 > 参考源码
@@ -748,6 +759,20 @@ void transfer(Entry[] newTable, boolean rehash) {
         }
     }
 }
+```
+  
+**UPDATE: **在JDK1.7.0_40，对`HashMap`有修改，创建空`HashMap`时，底层数据结构为空table，用于节省内存开销，[参考][4]，参考如下  
+  
+```java
+/**
+ * An empty table instance to share when the table is not inflated.
+ */
+static final Entry<?,?>[] EMPTY_TABLE = {};
+
+/**
+ * The table, resized as necessary. Length MUST Always be a power of two.
+ */
+transient Entry<K,V>[] table = (Entry<K,V>[]) EMPTY_TABLE;
 ```
   
 ###### <a name="JC.09">9.HashTable</a>
@@ -1602,3 +1627,4 @@ Java泛型中`wildcard`的掌握。
 [1]: http://book.douban.com/subject/24722612/
 [2]: http://my.oschina.net/indestiny/blog/209458
 [3]: http://www.raychase.net/698
+[4]: http://javarevisited.blogspot.sg/2014/07/java-optimization-empty-arraylist-and-Hashmap-cost-less-memory-jdk-17040-update.html
