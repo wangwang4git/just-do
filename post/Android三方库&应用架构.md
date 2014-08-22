@@ -17,7 +17,49 @@
 8. `UrlImageViewHelper`，也是个图片异步加载缓存库，可以学习学习源码，[主页][10]。
   
 9. `ACRA`，Android崩溃日志报告，[主页][12]。
-
+  
+10. `PhotoView`，图片显示，支持手势缩放，[主页][13]。
+  
+11. `GestureImageView`，图片显示，支持手势缩放，[主页][14]。
+  
+12. `Android-Gif-Drawable`，显示gif图，[主页][15]。
+  
+13. `Android-PullToRefresh`，下拉刷新，个人不推荐该下拉刷新的交互方式，[主页][16]。
+  
+14. `ActionBar-PullToRefresh`，下拉刷新，个人推荐的交互方式，[主页][17]，同时Google支持包也提供官方实现`SwipeRefreshLayout`，[参考][18]。
+  
+15. `SuperToasts`，Android Toast的增强版本，[主页][19]。
+  
+16. `android-async-http`，Android异步网络请求库，[主页][20]。
+  
+17. `greenDAO`，Sqlite3 ORM库，[主页][21]。
+  
+18. `OrmLite`，ORM库，[主页][22]。
+  
+19. `EventBus`，组件间事件总线，用于组件解耦，[主页][23]。
+  
+20. `Otto`，事件总线，`Square`出品，[主页][24]。
+  
+21. `NineOldAndroids`，Android 3.0增加`属性动画`，该库实现`属性动画`向前版本兼容，[主页][25]。
+  
+22. `fastjson`，阿里出品Json序列化/反序列化库，[主页][26]。
+  
+23. `Jackson`，Json序列化/反序列化库，[主页][27]。
+  
+24. `Gson`，Google出品Json序列化/反序列化库，[主页][28]。
+  
+25. `DebugLog`，日志信息增强可读性，[主页][29]。
+  
+26. `ProgressWheel`，圆形进度条，[主页][30]。
+  
+27. `FloatLabeledEditView`，`EditView`浮动提示，[主页][31]。
+  
+28. `PagerSlidingTabStrip`，An interactive indicator to navigate between the different pages of a ViewPager，[主页][32]。
+  
+29. `Android-ViewPagerIndicator`，交互同上，[主页][33]。
+  
+30. `line-breaking-widget-layout-for-android`，`PredicateLayout`用于实现自动换行的容器控件，[参考][34]。
+  
 ----
 #### Android应用架构经验
 
@@ -37,3 +79,25 @@
 [10]: https://github.com/koush/UrlImageViewHelper "UrlImageViewHelper"
 [11]: http://blog.jobbole.com/66115/
 [12]: https://github.com/ACRA/acra "ACRA"
+[13]: https://github.com/chrisbanes/PhotoView "PhotoView"
+[14]: https://github.com/jasonpolites/gesture-imageview "GestureImageView"
+[15]: https://github.com/koral--/android-gif-drawable "Android-Gif-Drawable"
+[16]: https://github.com/chrisbanes/Android-PullToRefresh "Android-PullToRefresh"
+[17]: https://github.com/chrisbanes/ActionBar-PullToRefresh "ActionBar-PullToRefresh"
+[18]: http://developer.android.com/intl/zh-cn/reference/android/support/v4/widget/SwipeRefreshLayout.html "SwipeRefreshLayout"
+[19]: https://github.com/JohnPersano/SuperToasts "SuperToasts"
+[20]: http://loopj.com/android-async-http/ "android-async-http"
+[21]: http://greendao-orm.com/ "greenDAO"
+[22]: http://ormlite.com/ "OrmLite"
+[23]: https://github.com/greenrobot/EventBus "EventBus"
+[24]: http://square.github.io/otto/ "Otto"
+[25]: http://nineoldandroids.com/ "NineOldAndroids"
+[26]: https://github.com/alibaba/fastjson "fastjson"
+[27]: https://github.com/FasterXML/jackson "Jackson"
+[28]: http://code.google.com/p/google-gson/ "Gson"
+[29]: https://github.com/MustafaFerhan/DebugLog "DebugLog"
+[30]: https://github.com/Todd-Davies/ProgressWheel "ProgressWheel"
+[31]: https://github.com/wrapp/floatlabelededittext "Float Labeled EditText"
+[32]: https://github.com/astuetz/PagerSlidingTabStrip "PagerSlidingTabStrip"
+[33]: https://github.com/JakeWharton/Android-ViewPagerIndicator "Android-ViewPagerIndicator"
+[34]: http://stackoverflow.com/questions/549451/line-breaking-widget-layout-for-android "PredicateLayout"
