@@ -60,6 +60,10 @@
   
 30. `line-breaking-widget-layout-for-android`，`PredicateLayout`用于实现自动换行的容器控件，[参考][34]。
   
+31. `StickyGridHeaders`，分组`GridView`，[主页][35]。
+  
+32. `SlidingMenu`，侧导航，[主页][36]。
+  
 ----
 #### Android应用架构经验
 
@@ -101,3 +105,5 @@
 [32]: https://github.com/astuetz/PagerSlidingTabStrip "PagerSlidingTabStrip"
 [33]: https://github.com/JakeWharton/Android-ViewPagerIndicator "Android-ViewPagerIndicator"
 [34]: http://stackoverflow.com/questions/549451/line-breaking-widget-layout-for-android "PredicateLayout"
+[35]: http://tonicartos.github.io/StickyGridHeaders/ "StickyGridHeaders"
+[36]: https://github.com/jfeinstein10/SlidingMenu "SlidingMenu"
