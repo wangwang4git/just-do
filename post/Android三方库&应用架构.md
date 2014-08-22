@@ -64,6 +64,16 @@
   
 32. `SlidingMenu`，侧导航，[主页][36]。
   
+33. `ActionBarSherlock`，`ActionBar`兼容包，[主页][37]，但是Google出了官方兼容包`ActionBarCompact`（现在已经不推荐使用`ActionBarSherlock`），[参考][38]，两者[对比][39]。
+  
+34. `DrawerLayout`，抽屉导航，Google官方兼容包`DrawerLayout`，[参考][40]。
+  
+35. `HoloAccent`，holo风格组件颜色快速替换，[主页][41]。
+  
+36. `commons-codec`，common encoders and decoders，[主页][42]。
+  
+37. `sanselan`，java实现的图片库，支持图片信息读取，项目中用来获取`EXIF`信息，[主页][43]。
+  
 ----
 #### Android应用架构经验
 
@@ -107,3 +117,10 @@
 [34]: http://stackoverflow.com/questions/549451/line-breaking-widget-layout-for-android "PredicateLayout"
 [35]: http://tonicartos.github.io/StickyGridHeaders/ "StickyGridHeaders"
 [36]: https://github.com/jfeinstein10/SlidingMenu "SlidingMenu"
+[37]: http://actionbarsherlock.com/ "ActionBarSherlock"
+[38]: http://android-developers.blogspot.com/2013/08/actionbarcompat-and-io-2013-app-source.html "ActionBarCompat"
+[39]: http://stackoverflow.com/questions/7844517/difference-between-actionbarsherlock-and-actionbar-compatibility "ActionBarSherlock vs ActionBarCompat"
+[40]: https://developer.android.com/intl/zh-cn/reference/android/support/v4/widget/DrawerLayout.html "DrawerLayout"
+[41]: https://github.com/negusoft/holoaccent "HoloAccent"
+[42]: http://commons.apache.org/proper/commons-codec/ "Commons Codec"
+[43]: http://commons.apache.org/proper/commons-imaging/ "Commons Imaging"
