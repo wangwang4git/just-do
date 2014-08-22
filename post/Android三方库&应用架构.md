@@ -9,13 +9,20 @@
 4. `RoboGuice`，依赖注入库，[主页][5]。
   
 5. `SmartImageView`，异步加载、本地/内存二级缓存，简单，适合用于三方库学习，[主页][6]。
-
+  
 6. `UniversalImageLoader`，异步加载、本地/内存二级缓存，[主页][7]，设计的缓存架构推荐好好读读，相关内容参见[文章][8]。
   
+7. `Picasso`，`Square`出品，必属精品，图片异步加载缓存，[主页][9]。
+  
+8. `UrlImageViewHelper`，也是个图片异步加载缓存库，可以学习学习源码，[主页][10]。
+  
+9. `ACRA`，Android崩溃日志报告，[主页][12]。
+
 ----
 #### Android应用架构经验
 
 1. [健壮且可读的安卓架构设计][3]
+2. [图片异步加载/缓存开源库选型][11]
 
 
 [1]: https://github.com/nhachicha/SnappyDB "SnappyDB"
@@ -26,3 +33,7 @@
 [6]: http://loopj.com/android-smart-image-view/ "SmartImageView"
 [7]: https://github.com/nostra13/Android-Universal-Image-Loader "UniversalImageLoader"
 [8]: ./UIL学习.md "UIL学习笔记"
+[9]: http://square.github.io/picasso/ "Picasso"
+[10]: https://github.com/koush/UrlImageViewHelper "UrlImageViewHelper"
+[11]: http://blog.jobbole.com/66115/
+[12]: https://github.com/ACRA/acra "ACRA"
