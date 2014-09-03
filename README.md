@@ -21,9 +21,12 @@ for my job...
 12. [Android三方库&应用架构](./post/Android三方库&应用架构.md)
 13. [Android桌面悬浮窗](./post/Android桌面悬浮窗.md)
 14. [Android Activity Fragment完整生命周期](./post/Android Activity Fragment完整生命周期.md)
+15. [SVN学习](./post/SVN学习.md)
 
 ## TO DO LIST
+- [ ] Android滤镜开发一二
 - [ ] Android开发规范系列
-- [ ] Java自己总结一二
-- [ ] 数据结构总结一二
+- [X] Java自己总结一二
+- [X] 数据结构总结一二
 - [ ] Android三方库&应用架构
+- [ ] SVN学习

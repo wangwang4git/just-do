@@ -1,0 +1,14 @@
+#### SVN学习
+
+###### 笔记思维导图
+  
+<center>![alt text](../img/SVN学习.png "SVN")</center>
+  
+
+#### 参考文献
+1. [版本控制之道-使用Subversion][1]
+2. [读懂diff][2]
+
+
+[1]: http://book.douban.com/subject/2038779/
+[2]: http://www.ruanyifeng.com/blog/2012/08/how_to_read_diff.html
