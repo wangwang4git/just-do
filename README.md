@@ -22,6 +22,7 @@ for my job...
 13. [Android桌面悬浮窗](./post/Android桌面悬浮窗.md)
 14. [Android Activity Fragment完整生命周期](./post/Android Activity Fragment完整生命周期.md)
 15. [SVN学习](./post/SVN学习.md)
+16. [获取Android设备ID](./post/获取Android设备ID.md)
 
 ## TO DO LIST
 - [ ] Android滤镜开发一二
