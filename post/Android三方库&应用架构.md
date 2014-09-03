@@ -74,12 +74,22 @@
   
 37. `sanselan`，java实现的图片库，支持图片信息读取，项目中用来获取`EXIF`信息，[主页][43]。
   
+38. `Glide`，图像加载缓存，[主页][44]。
+  
+39. `ButterKnife`，控件依赖注入，避免重复编写`findViewById`等，[主页][45]。
+  
+40. `Android-Priority-JobQueue`，Android任务调度，支持任务持久化，[主页][46]。
+  
 ----
 #### Android应用架构经验
 
 1. [健壮且可读的安卓架构设计][3]
 2. [图片异步加载/缓存开源库选型][11]
 
+----
+#### To Do List
+- [ ] Dragger学习与应用，对比`RoboGuice`、`ButterKnife`
+- [ ] 研究ORM实现原理
 
 [1]: https://github.com/nhachicha/SnappyDB "SnappyDB"
 [2]: https://github.com/stephanenicolas/robospice "RoboSpice"
@@ -124,3 +134,6 @@
 [41]: https://github.com/negusoft/holoaccent "HoloAccent"
 [42]: http://commons.apache.org/proper/commons-codec/ "Commons Codec"
 [43]: http://commons.apache.org/proper/commons-imaging/ "Commons Imaging"
+[44]: https://github.com/bumptech/glide "Glide"
+[45]: http://jakewharton.github.io/butterknife/ "ButterKnife"
+[46]: https://github.com/path/android-priority-jobqueue "Android-Priority-JobQueue"
