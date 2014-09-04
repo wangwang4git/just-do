@@ -80,11 +80,14 @@
   
 40. `Android-Priority-JobQueue`，Android任务调度，支持任务持久化，[主页][46]。
   
+41. `MPAndroidChart`，显示质量挺不错的Android图表库，[主页][49]。
+  
 ----
 #### Android应用架构经验
 
 1. [健壮且可读的安卓架构设计][3]
 2. [图片异步加载/缓存开源库选型][11]
+3. [做一个懒惰高效的Android程序员][47]，[原文链接][48]
 
 ----
 #### To Do List
@@ -137,3 +140,6 @@
 [44]: https://github.com/bumptech/glide "Glide"
 [45]: http://jakewharton.github.io/butterknife/ "ButterKnife"
 [46]: https://github.com/path/android-priority-jobqueue "Android-Priority-JobQueue"
+[47]: http://blog.jobbole.com/76361/
+[48]: http://www.technotalkative.com/lazy-part-8-wireframemockup-tools/
+[49]: https://github.com/PhilJay/MPAndroidChart "MPAndroidChart"

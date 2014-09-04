@@ -1,6 +1,6 @@
 #### SVN学习
 
-###### 笔记思维导图
+###### 笔记思维导图，[下载][3]
   
 <center>![alt text](../img/SVN学习.png "SVN")</center>
   
@@ -12,3 +12,4 @@
 
 [1]: http://book.douban.com/subject/2038779/
 [2]: http://www.ruanyifeng.com/blog/2012/08/how_to_read_diff.html
+[3]: ./SVN学习.xmind
