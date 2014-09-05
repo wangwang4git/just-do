@@ -25,6 +25,9 @@ for my job...
 16. [获取Android设备ID](./post/获取Android设备ID.md)
 17. [Android Methods Limitation](./post/Android Methods Limitation.md)
 18. [ANT学习](./post/ANT学习.md)
+19. [Golang学习](https://github.com/wangwang4git/golearning)
+20. [百度PushSDK反编译调研](https://github.com/wangwang4git/baidu-push-android)
+
 
 ## TO DO LIST
 - [ ] Android滤镜开发一二
