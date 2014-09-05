@@ -24,6 +24,7 @@ for my job...
 15. [SVN学习](./post/SVN学习.md)
 16. [获取Android设备ID](./post/获取Android设备ID.md)
 17. [Android Methods Limitation](./post/Android Methods Limitation.md)
+18. [ANT学习](./post/ANT学习.md)
 
 ## TO DO LIST
 - [ ] Android滤镜开发一二
@@ -33,3 +34,4 @@ for my job...
 - [ ] Android三方库&应用架构
 - [ ] SVN学习
 - [ ] Android Methods Limitation
+- [ ] ANT学习
