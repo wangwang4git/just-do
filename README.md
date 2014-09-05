@@ -23,6 +23,7 @@ for my job...
 14. [Android Activity Fragment完整生命周期](./post/Android Activity Fragment完整生命周期.md)
 15. [SVN学习](./post/SVN学习.md)
 16. [获取Android设备ID](./post/获取Android设备ID.md)
+17. [Android Methods Limitation](./post/Android Methods Limitation.md)
 
 ## TO DO LIST
 - [ ] Android滤镜开发一二
@@ -31,3 +32,4 @@ for my job...
 - [X] 数据结构总结一二
 - [ ] Android三方库&应用架构
 - [ ] SVN学习
+- [ ] Android Methods Limitation
