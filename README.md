@@ -27,6 +27,7 @@ for my job...
 18. [ANT学习](./post/ANT学习.md)
 19. [Golang学习](https://github.com/wangwang4git/golearning)
 20. [百度PushSDK反编译调研](https://github.com/wangwang4git/baidu-push-android)
+21. [NoSQL学习笔记.md](./post/NoSQL学习笔记.md)
 
 
 ## TO DO LIST
@@ -38,3 +39,4 @@ for my job...
 - [ ] SVN学习
 - [ ] Android Methods Limitation
 - [ ] ANT学习
+- [ ] NoSQL学习笔记
