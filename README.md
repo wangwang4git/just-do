@@ -36,7 +36,7 @@ for my job...
 - [X] Java自己总结一二
 - [X] 数据结构总结一二
 - [ ] Android三方库&应用架构
-- [ ] SVN学习
+- [X] SVN学习
 - [ ] Android Methods Limitation
 - [ ] ANT学习
 - [ ] NoSQL学习笔记
