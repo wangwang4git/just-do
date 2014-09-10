@@ -256,9 +256,15 @@
 
 > 具体java单元测试后续学习，留待日后
 
+#### Android中的注解[2]
+![alt text](../img/Annotation02.png "Android中的注解")
+
 
 #### TIDOLIST
 1. 使用`apt`处理注解
 
 #### 参考文献
 1. 《Java编程思想》
+2. [Java Annotation 及几个常用开源项目注解原理简析][2]
+
+[2]: http://www.trinea.cn/android/java-annotation-android-open-source-analysis/
