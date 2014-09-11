@@ -19,5 +19,7 @@
 > 对于`google-play-services.jar`函数过多问题，采用`剔除`不需要组件策略。工具`strip_play_services.sh`[主页](https://gist.github.com/dextorer/a32cad7819b7f272239b)。  
 > 借助`ProGuard`工具，剔除不需要的函数。  
 > Android的`插件`机制，封装相关逻辑代码到`DEX`文件，APP运行时通过`ClassLoader`动态加载。  
+> Android的插件机制，又是一个好大的知识点，可以参考[《Android 插件化 动态升级》][4]。
   
-
+  
+[4]: http://www.trinea.cn/android/android-plugin/
