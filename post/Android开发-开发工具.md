@@ -108,6 +108,7 @@ Android 4.1加入的新的性能分析工具，存放位置`/sdk/platform-tools/
 <br />
   
 #### 2. 简单说说`Gradle`构建工具
+Gradle有多好，打算写一篇相关的文章，现在给一篇[参考文章][11]吧！
 <br />
   
 #### 3. 三方工具
@@ -126,7 +127,7 @@ Android 4.1加入的新的性能分析工具，存放位置`/sdk/platform-tools/
 8. [Android应用程序的内存分析][8]
 9. [Android系统性能调优工具介绍][9]
 10. [Analyzing Display and Performance][10]
-
+11. [Announcing .. Gradle Tutorial Series][11]
 
 [1]: http://developer.android.com/intl/zh-cn/tools/help/index.html#tools-sdk
 [2]: http://developer.android.com/intl/zh-cn/tools/help/adb.html
@@ -138,4 +139,5 @@ Android 4.1加入的新的性能分析工具，存放位置`/sdk/platform-tools/
 [8]: http://www.cnblogs.com/wisekingokok/archive/2011/11/30/2245790.html
 [9]: http://my.oschina.net/innost/blog/135174#OSC_h3_11
 [10]: https://developer.android.com/intl/zh-cn/tools/debugging/systrace.html
+[11]: http://rominirani.com/2014/07/28/gradle-tutorial-series-an-overview/
 
