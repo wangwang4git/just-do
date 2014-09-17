@@ -30,6 +30,7 @@ for my job...
 21. [NoSQL学习笔记](./post/NoSQL学习笔记.md)
 22. [The Android Design Cheat Sheet](./post/The Android Design Cheat Sheet.md)
 23. [我在简网上生成的GoodMan001.apk破解笔记](./post/我在简网上生成的GoodMan001.apk破解笔记.md)
+24. [Git学习](./post/Git学习.md)
 
 
 ## TO DO LIST
@@ -42,3 +43,4 @@ for my job...
 - [ ] Android Methods Limitation
 - [ ] ANT学习
 - [ ] NoSQL学习笔记
+- [ ] Git学习
