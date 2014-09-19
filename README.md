@@ -31,6 +31,7 @@ for my job...
 22. [The Android Design Cheat Sheet](./post/The Android Design Cheat Sheet.md)
 23. [我在简网上生成的GoodMan001.apk破解笔记](./post/我在简网上生成的GoodMan001.apk破解笔记.md)
 24. [Git学习](./post/Git学习.md)
+25. [SublimeText3插件安装笔记](./post/SublimeText3插件安装笔记.md)
 
 
 ## TO DO LIST
@@ -44,3 +45,4 @@ for my job...
 - [ ] ANT学习
 - [ ] NoSQL学习笔记
 - [ ] Git学习
+- [ ] SublimeText3插件安装笔记
