@@ -47,13 +47,18 @@ Python配置文件如下：
   
 执行删除操作， 一是菜单项`Edit`-`Trailing Spaces`，二是自己配置快捷键`Preferences`-`Key Bindings - User`，如下：  
 ```
-[
-    { "keys": ["ctrl+alt+d"], "command": "delete_trailing_spaces" },
-    { "keys": ["ctrl+alt+o"], "command": "toggle_trailing_spaces" }
-]
+{ "keys": ["ctrl+alt+d"], "command": "delete_trailing_spaces" },
+{ "keys": ["ctrl+alt+o"], "command": "toggle_trailing_spaces" }
 
 ```
   
+###### 7. `Markdown Preview`
+包含两种`Markdown`解析器：`python-markdown`、`github markdown API`，但整体来说还是没有`Haroopad`编辑器方便。  
+  
+自己配置快捷键，预览时由用户自己选择解析器，如下：  
+```
+{ "keys": ["alt+m"], "command": "markdown_preview_select", "args": {"target": "browser"} }
+```
 
 ###### 参考
 1. [Packsge Control官网](https://sublime.wbond.net/)
