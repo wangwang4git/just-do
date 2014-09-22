@@ -51,10 +51,11 @@ pip search "query"
   
 * 配置
 pip配置，可以采用`命令行参数`、`环境变量`、`配置文件`，其中`配置文件`参考[Config file][6]。  
-配置优先级：
-> Command line options have precedence over environment variables, which have precedence over the config file.  
->  
-> Within the config file, command specific sections have precedence over the global section.  
+配置优先级：  
+```
+Command line options have precedence over environment variables, which have precedence over the config file.  
+Within the config file, command specific sections have precedence over the global section.  
+```
   
 ###### 2. `virtualenv`
 Python沙盒，[参考][2]。   
