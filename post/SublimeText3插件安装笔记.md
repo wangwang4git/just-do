@@ -59,6 +59,10 @@ Python配置文件如下：
 ```
 { "keys": ["alt+m"], "command": "markdown_preview_select", "args": {"target": "browser"} }
 ```
+  
+###### 8. `JsFormat`
+格式化`js`代码或者`json`数据！  
+  
 
 ###### 参考
 1. [Packsge Control官网](https://sublime.wbond.net/)
