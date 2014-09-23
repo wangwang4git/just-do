@@ -63,6 +63,8 @@ Python配置文件如下：
 ###### 8. `JsFormat`
 格式化`js`代码或者`json`数据！  
   
+###### 9. `LineEndings`
+转换`行尾`换行符。  
 
 ###### 参考
 1. [Packsge Control官网](https://sublime.wbond.net/)
