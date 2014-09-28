@@ -33,6 +33,7 @@ for my job...
 24. [Git学习](./post/Git学习.md)
 25. [SublimeText3插件安装笔记](./post/SublimeText3插件安装笔记.md)
 26. [Python开发工具收集](./post/Python开发工具收集.md)
+27. [Python学习笔记](./post/Python学习笔记.md)
 
 
 ## TO DO LIST
@@ -48,3 +49,4 @@ for my job...
 - [X] Git学习
 - [ ] SublimeText3插件安装笔记
 - [ ] Python开发工具收集
+- [ ] Python学习笔记
