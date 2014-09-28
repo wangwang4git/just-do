@@ -65,7 +65,25 @@ Python配置文件如下：
   
 ###### 9. `LineEndings`
 转换`行尾`换行符。  
+  
+###### 10. `ConvertToUTF8`
+由于Sublime Text对中文编码支持不好，国人开发`ConvertToUTF8`专用于解决该问题。  
+打开文件将`中文编码`转换为`utf-8`；保存文件将`utf-8`转换为打开文件时检测到的`中文编码`。  
+同时支持文件编码转换，菜单项`File`-`Set File Encoding to`。  
+  
+###### 11. `sublimeTmpl`
+html/js/css/php/python/ruby代码创建模板。  
+菜单项`File`-`New File (SublimeTmpl)`，或者命令`cmd+shift+p`-`tmpl`。  
 
 ###### 参考
-1. [Packsge Control官网](https://sublime.wbond.net/)
-2. [SublimeCodeIntel官网](http://sublimecodeintel.github.io/SublimeCodeIntel/)
+1. [Packsge Control](https://sublime.wbond.net/)
+2. [SideBarEnhancements](https://github.com/titoBouzout/SideBarEnhancements)
+3. [All Autocomplete](https://github.com/alienhard/SublimeAllAutocomplete)
+4. [SublimeCodeIntel](http://sublimecodeintel.github.io/SublimeCodeIntel/)
+5. [BracketHighlighter](https://github.com/facelessuser/BracketHighlighter)
+6. [TrailingSpaces](https://github.com/SublimeText/TrailingSpaces)
+7. [Markdown Preview](https://github.com/revolunet/sublimetext-markdown-preview)
+8. [JsFormat](https://github.com/jdc0589/JsFormat)
+9. [LineEndings](https://github.com/SublimeText/LineEndings)
+10. [ConvertToUTF8](https://github.com/seanliang/ConvertToUTF8)
+11. [sublimeTmpl](https://github.com/kairyou/sublimeTmpl)
