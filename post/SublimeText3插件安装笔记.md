@@ -1,9 +1,25 @@
 #### Sublime Text 3插件安装笔记
 
-###### 1. 手动安装`Package Control`
-菜单`View`-`Show Console`，输入如下代码后运行。  
+###### 1. 安装`Package Control`
+* 自动安装
+菜单`View`-`Show Console`，输入如下代码后运行（代码[参考][12]）。  
 ```
-import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ','%20')).read())
+import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)
+```
+  
+* 手动安装
+对于公司内网采用代理访问外网的情况，默认安装方式无效，只能手动安装。  
+  1. 菜单项`Preferences`-`Browse Packages…`；  
+  2. 返回上级目录，进入`Installed Packages`目录；  
+  3. 下载[`Package Control.sublime-package`](https://sublime.wbond.net/Package%20Control.sublime-package)，保存到`Installed Packages`目录（可能需要覆盖原`Package Control.sublime-package`文件）；  
+  4. 重启Sublime Text 3。  
+  
+**注意：**`Package Control`公司内网同样需要配置代理才可以下载插件，配置示例如下：
+```
+{
+	"http_proxy": "http://web-proxyhk.oa.com:8080"
+}
+
 ```
   
 ###### 2. `SideBarEnhancements`
@@ -87,3 +103,4 @@ html/js/css/php/python/ruby代码创建模板。
 9. [LineEndings](https://github.com/SublimeText/LineEndings)
 10. [ConvertToUTF8](https://github.com/seanliang/ConvertToUTF8)
 11. [sublimeTmpl](https://github.com/kairyou/sublimeTmpl)
+12. [INSTALLATION](https://sublime.wbond.net/installation)
