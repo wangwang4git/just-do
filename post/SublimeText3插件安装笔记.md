@@ -1,8 +1,10 @@
 #### Sublime Text 3插件安装笔记
 
+推荐一份[Sublime Text 3 文档](http://feliving.github.io/Sublime-Text-3-Documentation/)。  
+
 ###### 1. 安装`Package Control`
 * 自动安装
-菜单`View`-`Show Console`，输入如下代码后运行（代码[参考][12]）。  
+菜单`View`-`Show Console`，输入如下代码后运行（代码[参考](https://sublime.wbond.net/installation)）。  
 ```
 import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)
 ```
@@ -91,6 +93,17 @@ Python配置文件如下：
 html/js/css/php/python/ruby代码创建模板。  
 菜单项`File`-`New File (SublimeTmpl)`，或者命令`cmd+shift+p`-`tmpl`。  
 
+###### 12. `AAAPackageDev`
+简化开发Sublime Text的`syntax definitions`，实现自定义语法高亮。  
+本人用于实现日志的高亮，方便浏览查找。  
+具体如何开发，请参看[参考一](http://docs.sublimetext.info/en/latest/extensibility/syntaxdefs.html)、[参考二](http://manual.macromates.com/en/language_grammars#naming_conventions)。  
+
+###### 13. `MarkdownEditing`
+编辑`Markdown`。
+
+###### 14. `IMESupport`
+解决Sublime Text输入法不跟随bug。
+
 ###### 参考
 1. [Packsge Control](https://sublime.wbond.net/)
 2. [SideBarEnhancements](https://github.com/titoBouzout/SideBarEnhancements)
@@ -103,4 +116,6 @@ html/js/css/php/python/ruby代码创建模板。
 9. [LineEndings](https://github.com/SublimeText/LineEndings)
 10. [ConvertToUTF8](https://github.com/seanliang/ConvertToUTF8)
 11. [sublimeTmpl](https://github.com/kairyou/sublimeTmpl)
-12. [INSTALLATION](https://sublime.wbond.net/installation)
+12. [AAAPackageDev](https://github.com/SublimeText/AAAPackageDev)
+13. [MarkdownEditing](http://ttscoff.github.io/MarkdownEditing)
+14. [IMESupport](https://github.com/chikatoike/IMESupport)
