@@ -34,6 +34,7 @@ for my job...
 25. [SublimeText3插件安装笔记](./post/SublimeText3插件安装笔记.md)
 26. [Python开发工具收集](./post/Python开发工具收集.md)
 27. [Python学习笔记](./post/Python学习笔记.md)
+28. [Pig学习笔记](./post/Pig学习.md)
 
 
 ## TO DO LIST
@@ -50,3 +51,4 @@ for my job...
 - [ ] SublimeText3插件安装笔记
 - [ ] Python开发工具收集
 - [ ] Python学习笔记
+- [ ] Pig学习笔记
