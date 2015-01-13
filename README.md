@@ -35,6 +35,7 @@ for my job...
 26. [Python开发工具收集](./post/Python开发工具收集.md)
 27. [Python学习笔记](./post/Python学习笔记.md)
 28. [Pig学习笔记](./post/Pig学习.md)
+29. [sqlite3_corruption](./post/sqlite3_corruption.md)
 
 
 ## TO DO LIST
