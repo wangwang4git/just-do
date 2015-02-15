@@ -36,6 +36,7 @@ for my job...
 27. [Python学习笔记](./post/Python学习笔记.md)
 28. [Pig学习笔记](./post/Pig学习.md)
 29. [sqlite3_corruption](./post/sqlite3_corruption.md)
+30. [设计模式学习](./post/设计模式学习.md)
 
 
 ## TO DO LIST
@@ -53,3 +54,4 @@ for my job...
 - [ ] Python开发工具收集
 - [ ] Python学习笔记
 - [ ] Pig学习笔记
+- [ ] 设计模式学习

@@ -68,6 +68,16 @@ public class Director {
 * 测试用例
   
 ```java
+public class Main {
 
+    public static void main(String[] args) {
+        ConcreteBuilder builder = new ConcreteBuilder();
+        Director director = new Director(builder);
+        director.construct();
+        // 获取产品
+        Product product = builder.getResult();
+    }
+
+}
 ```
   
