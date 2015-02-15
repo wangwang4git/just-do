@@ -81,3 +81,5 @@ public class Main {
 }
 ```
   
+
+###### 4. BUILDER模式变种（构建复杂的对象）
