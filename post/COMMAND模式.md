@@ -101,5 +101,5 @@ public class Main {
 宏命令是包含命令的命令，即命令的组合。
 
 ###### 5. 参考文档
-[《JAVA与模式》之命令模式](http://www.cnblogs.com/java-my-life/archive/2012/06/01/2526972.html)
-[命令模式在MVC框架中的应用](http://blog.csdn.net/wsh622827/article/details/4759368)
+* [《JAVA与模式》之命令模式](http://www.cnblogs.com/java-my-life/archive/2012/06/01/2526972.html)
+* [命令模式在MVC框架中的应用](http://blog.csdn.net/wsh622827/article/details/4759368)
