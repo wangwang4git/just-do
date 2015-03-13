@@ -68,6 +68,17 @@ Android工程中有相当多的资源文件，包括`AndroidMaifest.xml`、`/res
   
 管理SDK。  
   
+    比较重要的几个命令：  
+      android list target  列出已经安装的SDK；  
+	  android list avd  列出已经创建的虚拟机；  
+  
+* `emulator`
+  
+管理虚拟机。  
+  
+    比较重要的几个命令：  
+      emulator -avd <AVD名>  启动模拟器；  
+  
 * `ddms`(Dalvik Debug Monitor Server)
   
 用于应用的Debug，包括日志输出，整合全部的分析工具等。  
@@ -76,10 +87,7 @@ Android工程中有相当多的资源文件，包括`AndroidMaifest.xml`、`/res
   
 用于`.9图片`编辑。**重点**，可以看看[这里][6]。  
   
-* `emulator`
-  
-管理虚拟机。  
-  
+
 * `hierarchyviewer`
   
 用于布局分析与优化。**重点**，网上一大堆文章，这里是[官方文档][7]。  
@@ -128,6 +136,7 @@ Gradle有多好，打算写一篇相关的文章，现在给一篇[参考文章]
 9. [Android系统性能调优工具介绍][9]
 10. [Analyzing Display and Performance][10]
 11. [Announcing .. Gradle Tutorial Series][11]
+12. [Android的一些常用命令提示符（cmd）指令][12]
 
 [1]: http://developer.android.com/intl/zh-cn/tools/help/index.html#tools-sdk
 [2]: http://developer.android.com/intl/zh-cn/tools/help/adb.html
@@ -140,4 +149,5 @@ Gradle有多好，打算写一篇相关的文章，现在给一篇[参考文章]
 [9]: http://my.oschina.net/innost/blog/135174#OSC_h3_11
 [10]: https://developer.android.com/intl/zh-cn/tools/debugging/systrace.html
 [11]: http://rominirani.com/2014/07/28/gradle-tutorial-series-an-overview/
+[12]: http://www.cnblogs.com/allenzheng/archive/2012/11/11/2765197.html
 
