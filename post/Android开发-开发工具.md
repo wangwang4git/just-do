@@ -28,14 +28,30 @@
 
 | 命令 | 描述 |
 | :----: | :---- |
+| adb devices | 列出当前可链接设备 |
 | adb shell | 启动当前设备/模拟器`shell`环境 |
+| adb -s 名称 shell | 启动指定设备`shell`环境 |
 | adb install apk文件全路径名 | 向当前设备/模拟器`安装`应用 |
 | adb uninstall 应用包名 | 从当前设备/模拟器`卸载`应用 |
 | adb pull 源文件 目标文件 | 从当前设备/模拟器拷贝文件到本地 |
 | adb push 源文件 目标文件 | 从本地向当前设备/模拟器拷贝文件 |
 
 注意：使用`adb shell`进入设备`shell`环境，但是该shell环境很多工具都没有，比如`grep`，因为Android删除了部分Linux标准工具。如果想使用这些工具，可以在越狱的手机上安装[`Busybox`][3]。  
-同时`shell`环境下，有一个有用的命令`dumpsys`，用来显示当前系统/应用信息。比如想显示`快站管理App`的当前`Activity`信息，可以使用`adb shell dumpsys activity com.sohu.zhan.zhanmanager`命令。
+  
+* `dumpsys`
+  
+同时`shell`环境下，有一个有用的命令`dumpsys`，用来显示当前系统/应用信息。  
+  
+| 命令 | 描述 |
+| :----: | :---- |
+| meminfo | 显示内存信息 |
+| cpuinfo | 显示CPU信息 |
+| account | 显示accounts信息 |
+| activity | 显示所有的activities的信息 |
+| window | 显示键盘，窗口和它们的关系 |
+| wifi | 显示wifi信息 |
+  
+比如想显示`快站管理App`的当前`Activity`信息，可以使用`adb shell dumpsys activity com.sohu.zhan.zhanmanager`命令。  
   
 * `dx`
   
@@ -120,6 +136,19 @@ Gradle有多好，打算写一篇相关的文章，现在给一篇[参考文章]
 <br />
   
 #### 3. 三方工具
+写在前面，市面上的手机阉割了很多有用的命令行工具，比如`sqlite3`、`tcpdump`，或者想安装[`busybox`][13]。  
+  
+简单的安装步骤如下：  
+1. 获取命令行工具，要么从网上下载，要么从模拟器中`pull`；
+2. `push`到手机SD卡；
+3. 重新挂载`/system`目录为可读写（root模式）；
+> mount -o remount,rw -t yaffs2 /dev/block/mtdblock3 /system
+4. 手机SD卡到`/system/bin`或`/system/xbin`目录；
+> cat /mnt/sdcard/sqlite3 > /system/xbin/sqlite3
+5. 命令行工具权限修改；
+> chmod 755 sqlite3
+6. OK~
+  
 <br />
   
 
@@ -137,6 +166,7 @@ Gradle有多好，打算写一篇相关的文章，现在给一篇[参考文章]
 10. [Analyzing Display and Performance][10]
 11. [Announcing .. Gradle Tutorial Series][11]
 12. [Android的一些常用命令提示符（cmd）指令][12]
+13. [为Android安装BusyBox —— 完整的bash shell][13]
 
 [1]: http://developer.android.com/intl/zh-cn/tools/help/index.html#tools-sdk
 [2]: http://developer.android.com/intl/zh-cn/tools/help/adb.html
@@ -150,4 +180,4 @@ Gradle有多好，打算写一篇相关的文章，现在给一篇[参考文章]
 [10]: https://developer.android.com/intl/zh-cn/tools/debugging/systrace.html
 [11]: http://rominirani.com/2014/07/28/gradle-tutorial-series-an-overview/
 [12]: http://www.cnblogs.com/allenzheng/archive/2012/11/11/2765197.html
-
+[13]: http://www.cnblogs.com/xiaowenji/archive/2011/03/12/1982309.html
