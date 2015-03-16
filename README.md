@@ -37,6 +37,7 @@ for my job...
 28. [Pig学习笔记](./post/Pig学习.md)
 29. [sqlite3_corruption](./post/sqlite3_corruption.md)
 30. [设计模式学习](./post/设计模式学习.md)
+31. [Android内存泄漏相关汇总](./AndroidLeak/AndroidLeak.md)
 
 
 ## TO DO LIST
@@ -55,3 +56,4 @@ for my job...
 - [ ] Python学习笔记
 - [ ] Pig学习笔记
 - [ ] 设计模式学习
+- [ ] Android内存泄漏相关汇总
