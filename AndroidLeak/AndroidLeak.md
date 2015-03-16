@@ -250,20 +250,21 @@ public static boolean dumpHeapFile() {
 启动MAT（推荐下载独立的MAT程序，Eclipse中插件装多了，会很卡的，当然Eclipse JVM参数调优可以缓解下，但只是缓解下~），Open Heap Dump，MAT分析结束会有两个TAB页：`Overview`、`Leak Suspects`。  
   
 先解释三个名词：  
+  
 1. `Shallow Heap`：指对象自身所占用的内存大小，不包含其引用的对象所占的内存大小。
-  * 数组类型：数组元素对象所占内存的大小总和;
-  * 非数组类型：对象与它所有的成员变量大小的总和，当然这里面还会包括一些java语言特性的数据存储单元；
+    * 数组类型：数组元素对象所占内存的大小总和;
+    * 非数组类型：对象与它所有的成员变量大小的总和，当然这里面还会包括一些java语言特性的数据存储单元；
   
 2. `Retained Heap`：当前对象大小 + 当前对象可直接或间接引用到的对象的大小总和。
   
 3. `GC Root`：Java中GC策略是基于对象`引用是否可达`来判断是否需要GC，引用可达判断起点就是GC Roots。JVM规范定义如下GC Roots：
-  * Class：class loaded by system class loader；
-  * Thread：live thread；
-  * Stack Local：local variable or parameter of Java method；
-  * JNI Local：local variable or parameter of JNI method；
-  * JNI Global：global JNI reference；
-  * Monitor Used：objects used as a monitor for synchronization；
-  * Held by JVM：objects held from garbage collection by JVM for its purposes；
+    * Class：class loaded by system class loader；
+    * Thread：live thread；
+    * Stack Local：local variable or parameter of Java method；
+    * JNI Local：local variable or parameter of JNI method；
+    * JNI Global：global JNI reference；
+    * Monitor Used：objects used as a monitor for synchronization；
+    * Held by JVM：objects held from garbage collection by JVM for its purposes；
   
 MAT在展示对象列表时，会对`GC Root`特别标注，如图：  
   
