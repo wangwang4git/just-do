@@ -2,10 +2,10 @@
 
 ---
 
-#### 如何测试内存泄漏场景的存在
+#### 一：如何测试内存泄漏场景的存在
 下面描述几种Android应用内存泄漏定位方法。  
   
-###### 1. `procrank`命令
+##### 1. `procrank`命令
   
 `procrank`命令可以获取当前系统各进程内存占用快照，从`/proc/pid/maps`读取相关信息而来。  
   
@@ -27,7 +27,8 @@
   
 那么如何测试应用在使用过程中存在内存泄漏问题呢？  
   
-    写个脚本，每隔固定采样时间（比如5s），执行一次procrank，把结果输出到指定文件，持续多长时间你自己控制，这个过程中疯狂的使用待测app。  
+    写个脚本，每隔固定采样时间（比如5s），执行一次procrank，把结果输出到指定文件，  
+	持续多长时间你自己控制，这个过程中疯狂的使用待测app。  
   
 > 注意：procrank命令不支持输出单个进程的内存信息，结果输出到指定文件前，需要用grep做过滤。（grep被阉割，请安装busybox）。
 ![](./MAT入门02.png)
@@ -75,7 +76,7 @@ done
   
 > 补充：`showmap`命令查看Android进程内存占用情况。
   
-###### 2. `dumpsys`命令
+##### 2. `dumpsys`命令
 `dumpsys`命令用处很多，基本可以用来dump系统的各种信息，比如内存信息、CPU信息、activities信息、windows信息、wifi信息等。  
   
 ![](./MAT入门04.png)
@@ -86,18 +87,19 @@ done
 # TODO：脚本开发
 ```
   
-####### 3. `cat /proc/meminfo`获取系统内存信息
+  
+##### 3. `cat /proc/meminfo`获取系统内存信息
   
 ![](./MAT入门05.png)
   
 读取`meminfo`文件，可以获取Android系统内存分配、内存使用情况，可以了解当前系统是否处于内存紧张状态，系统层面的宏观认识，对具体到某一应用的内存情况，此方法无能为力。  
   
-###### 4. `ps`获取进程信息
+##### 4. `ps`获取进程信息
 `ps`加`grep`，展示某一进程信息，其中进程信息包括`RSS`占用情况。可是上文我们说过，`RSS`包括共享库部分，可以参考，但是一般不用。  
   
 ![](./MAT入门06.png)
   
-###### 5. Debug.getMemoryInfo()或者ActivityManager.getProcessMemoryInfo()
+##### 5. Debug.getMemoryInfo()或者ActivityManager.getProcessMemoryInfo()
 调用上述两个函数，都会返回`MemoryInfo`对象，`MemoryInfo`详细描述了应用内存情况，字段如下：  
   
 ![](./MAT入门07.png)
@@ -174,7 +176,7 @@ private Thread thread = new Thread() {
 > 拓展阅读：  
 > * ActivityManager.getMemoryInfo() 返回系统当前内存情况  
   
-###### 6. DDMS
+##### 6. DDMS
 借助DDMS中的Heap页，可以直观的看到应用内存占用情况。  
   
 具体操作：
@@ -192,10 +194,10 @@ private Thread thread = new Thread() {
   
 ![](./MAT入门09.png)
   
-#### 如何获取hprof文件
+#### 二：如何获取hprof文件
 通过上文介绍的各种方法，我们可以明确待测应用是否发生了内存泄漏，如果发生了内存泄漏，下一步就是dump出泄漏前后heap快照文件，通过分析heap快照文件，明确知道泄漏的对象是哪些，已经如何fix内存泄漏问题。  
   
-###### 1. Debug.dumpHprofData()
+##### 1. Debug.dumpHprofData()
 Android API提供了Debug.dumpHprofData()获取hprof文件，通过该方法，需要修改待测试应用的源码，参考代码如下：
   
 ```java
@@ -235,15 +237,15 @@ public static boolean dumpHeapFile() {
   
 在测试应用前，先dump出`heap快照1`，然后疯狂使用应用，让应用尽情去泄漏，一段时间后再次dump出`heap快照2`。  
   
-###### 2. DDMS
+##### 2. DDMS
 直接点击Devices视图上的`Dump HPROF file`图标，导出heap快照文件。这种方法的好处是，完全不用修改待测应用的源码。  
   
-#### 再转hprof文件
+#### 三：再转hprof文件
 获取的hprof文件是Dalvik格式，直接用MAT打开，会报错，需要转成Java虚拟机规范格式。  
   
 	hprof-conf old.hprof new.hprof
   
-#### MAT打开hprof文件
+#### 四：MAT打开hprof文件
 说了这么多，这才是正题！  
   
 启动MAT（推荐下载独立的MAT程序，Eclipse中插件装多了，会很卡的，当然Eclipse JVM参数调优可以缓解下，但只是缓解下~），Open Heap Dump，MAT分析结束会有两个TAB页：`Overview`、`Leak Suspects`。  
@@ -289,11 +291,11 @@ MAT在展示对象列表时，会对`GC Root`特别标注，如图：
   
 更复杂一点的场景，...  
   
-#### Android常见内存泄漏场景汇总
+#### 五：Android常见内存泄漏场景汇总
 
   
 <br />
-###### 参考链接
+#### 六：参考链接
 1. [How do I discover memory usage of my application in Android?](http://stackoverflow.com/questions/2298208/how-do-i-discover-memory-usage-of-my-application-in-android)
 2. [Android内存之VSS/RSS/PSS/USS  ](http://hubingforever.blog.163.com/blog/static/17104057920114411313717/)
 3. [也谈Android内存那点事——深入内存数据和MAT应用](http://km.oa.com/group/2714/articles/show/109931?kmref=search)

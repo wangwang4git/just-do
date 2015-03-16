@@ -1,10 +1,9 @@
 just-do
 =======
 
-for my job...
+for fun...
 
 ----
-[resume](./resume/resume.md)
 
 ## list
 1. [Android WebView Java与JavaScript互调](./post/Android WebView Java与JavaScript互调.md)
