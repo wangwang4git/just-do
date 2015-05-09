@@ -23,10 +23,68 @@
 2. 开启`activity`监控，也很简单，第一次反射拿到`android.app.ActivityThread`的单例`sCurrentActivityThread`，第二次反射拿到`sCurrentActivityThread`的成员`mInstrumentation`，保存旧的`mInstrumentation`，用自己的`MonitorInstrumentation`替换系统的。  
 代码很短，却给我很大启示，活用java反射hack系统，完成自己的目的！  
   
-3. `MonitorInstrumentation`实现只重写了`callActivityOnDestroy()`方法，一旦手Q中有activity被destory，该方法就会被回调，给子线程传Runnable`InspectorRunner`，同时调用清理资源函数，清理与该activity相关的资源，参见`ActivityLeakSolution`实现。  
+	```java
+	public static boolean startActivityInspect() {
+		Object currentActivityThread = BaseApplicationImpl.sCurrentActivityThread;
+		Field field = currentActivityThread.getClass().getDeclaredField("mInstrumentation");
+		field.setAccessible(true);
+		field.set(currentActivityThread, new MonitorInstrumentation());
+	}
 
+	private static class MonitorInstrumentation extends Instrumentation {
+		@Override
+		public void callActivityOnDestroy(Activity activity) {
+			sOldInstr.callActivityOnDestroy(activity);
+			afterOnDestroy(activity);
+		}
+
+		public static void afterOnDestroy(Activity activity) {
+			startInspect(activity);
+		}
+	}
+	```
+  
+3. `MonitorInstrumentation`实现只重写了`callActivityOnDestroy()`方法，一旦手Q中有activity被destory，该方法就会被回调，给子线程传Runnable`InspectorRunner`，同时调用清理资源函数，清理与该activity相关的资源，参见`ActivityLeakSolution`实现。  
+  
 4. `InspectorRunner`先用弱引用持有当前被destory的activity，然后每间隔1s，检测弱引用`get()`操作是否为空，
 不为空显然还没被gc，继续循环，循环100次。  
+  
+	```java
+	private class InspectorRunner implements Runnable {
+		private WeakReference<Object> ref;
+		private String className;
+
+		InspectorRunner(WeakReference<Object> ref, String name, int retryCount) {
+			this.ref = ref;
+			try {
+				className = ref.get().getClass().getSimpleName();
+			} catch(Exception e) {
+				className = "Default";
+			}
+		}
+
+		@Override
+		public void run() {
+			if (ref.get() != null) {//还没有释放
+				if (++retryCount < LOOP_MAX_COUNT) {
+					System.gc();
+					mHandler.postDelayed(this, 1000);
+					return ;
+				} else {
+					//到这里是检查完毕了，回调一下通知结果
+					if (QLog.isColorLevel()) {
+						QLog.d(TAG, QLog.CLR, "inspect " + digest + " leaked");
+					}
+					mListener.onLeaked(digest, ref);
+				}
+			} else {
+				if (QLog.isColorLevel()) {
+					QLog.d(TAG, QLog.CLR, "inspect " + digest + " finished no leak");
+				}
+			}
+		}
+	}
+	```
   
 5. 如果检测100次（很显然时间是至少100s），还没被回收，就判断该activity发生了泄漏，dump dalvik堆快照，over~
   
