@@ -37,6 +37,7 @@ for fun...
 29. [sqlite3_corruption](./post/sqlite3_corruption.md)
 30. [设计模式学习](./post/设计模式学习.md)
 31. [Android内存泄漏相关汇总](./AndroidLeak/AndroidLeak.md)
+32. [Android内存泄漏检测工具LeakCanary原理分析](./AndroidLeak/Android内存泄漏检测工具LeakCanary原理分析.md)
 
 
 ## TO DO LIST
