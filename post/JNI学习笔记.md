@@ -198,6 +198,7 @@ jsize GetStringLength(JNIEnv *env, jstring string);
 ```
 返回unicode字符串长度  
 
+
 ```
 jsize GetStringUTFLength(JNIEnv *env, jstring string);
 ```
@@ -209,6 +210,7 @@ jsize GetStringUTFLength(JNIEnv *env, jstring string);
 jstring NewString(JNIEnv *env, const jchar *unicodeChars, jsize len);
 ```
 用unicode字符串创建java String  
+
 
 ```
 jstring NewStringUTF(JNIEnv *env, const char *bytes);
@@ -224,8 +226,82 @@ void GetStringRegion(JNIEnv *env, jstring str, jsize start, jsize len, jchar *bu
 ```
 获取指定区域unicode字符  
 
+
 ```
 void GetStringUTFRegion(JNIEnv *env, jstring str, jsize start, jsize len, char *buf);
 ```
 获取指定区域utf-8字符  
 
+#### JNI数组处理
+
+JNI数组，基本类型数组，引用类型数组，处理方式不一样  
+
+* 数组长度
+
+```
+jsize GetArrayLength(JNIEnv *env, jarray array);
+```
+返回数组长度  
+
+* 基本类型 访问数组
+
+```
+void Get<PrimitiveType>ArrayRegion(JNIEnv *env, ArrayType array, jsize start, jsize len, NativeType *buf);
+```
+获取数组元素至缓冲区  
+
+```
+NativeType *Get<PrimitiveType>ArrayElements(JNIEnv *env, ArrayType array, jboolean *isCopy);
+```
+获取数组指针，底层可能会创建缓冲区  
+
+```
+void * GetPrimitiveArrayCritical(JNIEnv *env, jarray array, jboolean *isCopy);
+```
+参考Get<PrimitiveType>ArrayElements，目的提高JVM返回源字符串直接指针的可能性，效率会高一点  
+
+* 基本类型 设置数组
+
+```
+void Set<PrimitiveType>ArrayRegion(JNIEnv *env, ArrayType array, jsize start, jsize len, NativeType *buf);
+```
+缓冲区数据copy到jni数组  
+
+* 基本类型 释放数组
+
+因为底层可能创建了缓冲区，所以使用完后需要做释放  
+
+```
+void Release<PrimitiveType>ArrayElements(JNIEnv *env, ArrayType array, NativeType *elems, jint mode);
+```
+```
+void ReleasePrimitiveArrayCritical(JNIEnv *env, jarray array, void *carray, jint mode);
+```
+
+* 基本类型 创建数组
+
+```
+ArrayType New<PrimitiveType>Array(JNIEnv *env, jsize length);
+```
+
+* 引用类型 访问数组  
+只支持访问单个元素  
+
+```
+jobject GetObjectArrayElement(JNIEnv *env, jobjectArray array, jsize index);
+```
+获取index处对象  
+
+* 引用类型 设置数组
+
+```
+void SetObjectArrayElement(JNIEnv *env, jobjectArray array, jsize index, jobject value);
+```
+设置index处对象为value  
+
+* 引用类型 创建数组
+
+```
+jobjectArray NewObjectArray(JNIEnv *env, jsize length, jclass elementClass, jobject initialElement);
+```
+创建数组，元素类型elementClass  
