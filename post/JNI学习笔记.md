@@ -1,4 +1,4 @@
-### JNI学习笔记
+### JNI笔记
 
 #### JNI是什么
 
@@ -305,3 +305,6 @@ void SetObjectArrayElement(JNIEnv *env, jobjectArray array, jsize index, jobject
 jobjectArray NewObjectArray(JNIEnv *env, jsize length, jclass elementClass, jobject initialElement);
 ```
 创建数组，元素类型elementClass  
+
+#### 参考文献
+1. [JNI官方文档](https://docs.oracle.com/javase/6/docs/technotes/guides/jni/spec/jniTOC.html)

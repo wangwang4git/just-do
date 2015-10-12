@@ -40,6 +40,7 @@ for fun...
 32. [Android内存泄漏检测工具LeakCanary原理分析](./AndroidLeak/Android内存泄漏检测工具LeakCanary原理分析.md)
 33. [docker OS X](./post/docker OS X.md)
 34. [JNI总结](./post/JNI学习笔记.md)
+35. [mac android studio快捷键](./post/mac android studio快捷键.md)
 
 
 ## TO DO LIST
@@ -60,3 +61,4 @@ for fun...
 - [ ] 设计模式学习
 - [ ] Android内存泄漏相关汇总
 - [ ] JNI学习笔记
+- [ ] mac android studio快捷键
