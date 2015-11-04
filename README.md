@@ -41,6 +41,7 @@ for fun...
 33. [docker OS X](./post/docker OS X.md)
 34. [JNI总结](./post/JNI学习笔记.md)
 35. [mac android studio快捷键](./post/mac android studio快捷键.md)
+36. [ndk开发本地代码优化--Linux本地代码优化](./post/ndk开发本地代码优化--Linux本地代码优化.md)
 
 
 ## TO DO LIST
