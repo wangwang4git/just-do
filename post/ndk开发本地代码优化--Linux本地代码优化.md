@@ -1,6 +1,6 @@
 ## ndk开发本地代码优化--Linux本地代码优化
 
-ndk开发本身就是对Android App热点逻辑的优化，即用C/C++执行流替代Java执行流，把么ndk开发的native代码是不是就不用优化了呢？  
+ndk开发本身就是对Android App热点逻辑的优化，即用C/C++执行流替代Java执行流，那么ndk开发的native代码是不是就不用优化了呢？  
   
 好像也不是吧，如果native代码写的不优美，native层一样会暴露一堆问题，比如内存泄露，函数热点等。  
   
